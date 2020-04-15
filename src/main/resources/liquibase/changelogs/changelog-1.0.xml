@@ -81,7 +81,10 @@
             <column name="time" type="timestamp" encoding="utf8" remarks="订单时间">
                 <constraints  nullable="false"></constraints>
             </column>
-            <column name="goods" type="varchar(100)" encoding="utf8" remarks="订单" >
+            <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="num" type="integer(5)" encoding="utf8" remarks="套餐数量" >
                 <constraints  nullable="false"></constraints>
             </column>
             <column name="state" type="integer(2)" encoding="utf8" remarks="订单状态" >

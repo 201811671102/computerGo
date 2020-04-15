@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.computerGo.mapper.IdentityMapper">
+  <resultMap id="BaseResultMap" type="com.computerGo.pojo.Identity">
+    <id column="iid" jdbcType="INTEGER" property="iid" />
+    <result column="uname" jdbcType="VARCHAR" property="uname" />
+    <result column="uphone" jdbcType="VARCHAR" property="uphone" />
+    <result column="uidcard" jdbcType="VARCHAR" property="uidcard" />
+    <result column="uaddress" jdbcType="VARCHAR" property="uaddress" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    iid, uname, uphone, uidcard, uaddress
+  </sql>
+  <select id="selectByExample" parameterType="com.computerGo.pojo.IdentityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from identity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from identity
+    where iid = #{iid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from identity
+    where iid = #{iid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.computerGo.pojo.IdentityExample">
+    delete from identity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.computerGo.pojo.Identity">
+    <selectKey keyProperty="iid" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into identity (uname, uphone, uidcard, 
+      uaddress)
+    values (#{uname,jdbcType=VARCHAR}, #{uphone,jdbcType=VARCHAR}, #{uidcard,jdbcType=VARCHAR}, 
+      #{uaddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.computerGo.pojo.Identity">
+    <selectKey keyProperty="iid" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into identity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uname != null">
+        uname,
+      </if>
+      <if test="uphone != null">
+        uphone,
+      </if>
+      <if test="uidcard != null">
+        uidcard,
+      </if>
+      <if test="uaddress != null">
+        uaddress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uname != null">
+        #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="uphone != null">
+        #{uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="uidcard != null">
+        #{uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="uaddress != null">
+        #{uaddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.computerGo.pojo.IdentityExample" resultType="java.lang.Long">
+    select count(*) from identity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update identity
+    <set>
+      <if test="record.iid != null">
+        iid = #{record.iid,jdbcType=INTEGER},
+      </if>
+      <if test="record.uname != null">
+        uname = #{record.uname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uphone != null">
+        uphone = #{record.uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uidcard != null">
+        uidcard = #{record.uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uaddress != null">
+        uaddress = #{record.uaddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update identity
+    set iid = #{record.iid,jdbcType=INTEGER},
+      uname = #{record.uname,jdbcType=VARCHAR},
+      uphone = #{record.uphone,jdbcType=VARCHAR},
+      uidcard = #{record.uidcard,jdbcType=VARCHAR},
+      uaddress = #{record.uaddress,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.computerGo.pojo.Identity">
+    update identity
+    <set>
+      <if test="uname != null">
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="uphone != null">
+        uphone = #{uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="uidcard != null">
+        uidcard = #{uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="uaddress != null">
+        uaddress = #{uaddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where iid = #{iid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.computerGo.pojo.Identity">
+    update identity
+    set uname = #{uname,jdbcType=VARCHAR},
+      uphone = #{uphone,jdbcType=VARCHAR},
+      uidcard = #{uidcard,jdbcType=VARCHAR},
+      uaddress = #{uaddress,jdbcType=VARCHAR}
+    where iid = #{iid,jdbcType=INTEGER}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="com.computerGo.pojo.IdentityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from identity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

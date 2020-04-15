@@ -1,10 +1,26 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/computerGo?characterEncoding=utf-8&useSSL=false
     username: root
     password: root
+    platform: mysql
     type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    druid:
+      initial-size: 5
+      min-idle: 5 #最小连接数
+      max-active: 20 #最大连接数
+      max-wait: 600000 #最大等待时间
+      time-between-eviction-runs-millis: 60000 #空闲连接的检查时间间隔
+      min-evictable-idle-time-millis: 300000 #
+      validation-query: SELECT1FROMDUAL #解决mysql8小时的问题
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      filter:
+        stat:
+          log-slow-sql: true
+
   servlet:
     multipart:
       max-file-size: 200MB #设置单个上传文件大小
@@ -39,6 +55,10 @@ spring:
     template-loader-path: classpath:/templates
     charset: utf-8
     check-template-location: true
+
+  data:
+    solr:
+      host: http://39.96.68.53:8888/solr/
 
 mybatis:
   type-aliases-package: com.computerGo.pojo
