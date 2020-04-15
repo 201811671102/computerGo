@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/computerGo?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+  servlet:
+    multipart:
+      max-file-size: 200MB #设置单个上传文件大小
+      max-request-size: 200MB #设置一次请求上传文件的总容量
+  redis:
+    port: 6379
+    database: 1
+    host: 39.96.68.53
+    password:
+    jedis:
+      pool:
+        max-active: 200
+        max-wait: -1ms
+        max-idle: 1
+        min-idle: 0
+    timeout: 1000
+  liquibase:
+    contexts: dev
+    change-log: 'classpath:liquibase/master.xml'
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: utf-8
+    mode: HTML5
+    cache: false
+    servlet:
+      content-type: text/html
+  freemarker:
+    content-type: text/html
+    suffix: .ftl #后缀名
+    template-loader-path: classpath:/templates
+    charset: utf-8
+    check-template-location: true
+
+mybatis:
+  type-aliases-package: com.computerGo.pojo
+  mapper-locations: classpath:mappers/*.xml
+
+logging:
+  level:
+    pre.cg.mapper: debug #指定类的日志级别
+  path: logs/ #指定日志生成路径
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n" #控制台输出日志格式
+    file: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n "#文件输出日志格式
+

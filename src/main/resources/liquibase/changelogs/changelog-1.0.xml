@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="20200415" author="CG">
+        <preConditions>
+            <not>
+                <tableExists tableName="user"></tableExists>
+                <tableExists tableName="identity"></tableExists>
+                <tableExists tableName="repertory"></tableExists>
+                <tableExists tableName="package"></tableExists>
+                <tableExists tableName="order"></tableExists>
+                <tableExists tableName="ur"></tableExists>
+                <tableExists tableName="rp"></tableExists>
+                <tableExists tableName="ui"></tableExists>
+                <tableExists tableName="uo"></tableExists>
+            </not>
+        </preConditions>
+        <createTable tableName="user">
+            <column name="uid" type="integer(50)" encoding="utf8" remarks="用户id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="openid" type="varchar(50)" encoding="utf8" remarks="openid">
+                <constraints nullable="false" unique="true"></constraints>
+            </column>
+        </createTable><!--用户-->
+        <createTable tableName="identity">
+            <column name="iid" type="integer(100)" encoding="utf8" remarks="身份表id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="uname" type="varchar(30)" encoding="utf8" remarks="用户名字" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="uphone" type="varchar(30)" encoding="utf8" remarks="用户手机" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="uidcard" type="varchar(30)" encoding="utf8" remarks="用户身份证" >
+                <constraints  nullable="true"></constraints>
+            </column>
+            <column name="uaddress" type="varchar(150)" encoding="utf8" remarks="用户详细地址" >
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--身份表-->
+        <createTable tableName="repertory">
+            <column name="rid" type="integer(100)" encoding="utf8" remarks="库存id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="title" type="varchar(50)" encoding="utf8" remarks="库存标题" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="price" type="double(10)" encoding="utf8" remarks="库存价格" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="evaluation" type="integer(2)" encoding="utf8" remarks="评价等级" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="photo" type="varchar(200)" encoding="utf8" remarks="相关照片" >
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--库存-->
+        <createTable tableName="package" >
+            <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="packagemessage" type="varchar(100)" encoding="utf8" remarks="套餐" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="number" type="integer(10)" encoding="utf8" remarks="套餐数量" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="price" type="double(10)" encoding="utf8" remarks="套餐价格" >
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--套餐-->
+        <createTable tableName="order" >
+            <column name="oid" type="integer(100)" encoding="utf8" remarks="订单id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="time" type="timestamp" encoding="utf8" remarks="订单时间">
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="goods" type="varchar(100)" encoding="utf8" remarks="订单" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="state" type="integer(2)" encoding="utf8" remarks="订单状态" >
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--订单-->
+        <createTable tableName="ur" >
+            <column name="urid" type="integer(100)" encoding="utf8" remarks="商户库存id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="uid" type="integer(50)" encoding="utf8" remarks="用户id">
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="rid" type="integer(100)" encoding="utf8" remarks="库存id" >
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable><!--商户库存-->
+        <createTable tableName="rp" >
+            <column name="rpid" type="integer(100)" encoding="utf8" remarks="库存套餐id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="rid" type="integer(100)" encoding="utf8" remarks="库存id" >
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="type" type="integer(2)" encoding="utf8" remarks="库存类型 0电脑 1cpu 2主板 3显卡 4散热器 5内存" >
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--库存套餐-->
+        <createTable tableName="ui">
+            <column name="uiid" type="integer(100)" encoding="utf8" remarks="用户身份关联表id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="uid" type="integer(50)" encoding="utf8" remarks="用户id" >
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="iid" type="integer(100)" encoding="utf8" remarks="身份表id" >
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable><!--用户身份-->
+        <createTable tableName="uo">
+            <column name="uoid" type="integer(100)" encoding="utf8" remarks="用户订单id" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+            <column name="uid" type="integer(50)" encoding="utf8" remarks="用户id" >
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="oid" type="integer(100)" encoding="utf8" remarks="订单id">
+                <constraints  nullable="false"></constraints>
+            </column>
+        </createTable><!--用户订单-->
+    </changeSet>
+</databaseChangeLog>
