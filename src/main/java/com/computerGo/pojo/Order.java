@@ -13,6 +13,8 @@ public class Order {
 
     private Integer state;
 
+    private String uaddress;
+
     public Integer getOid() {
         return oid;
     }
@@ -51,5 +53,13 @@ public class Order {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getUaddress() {
+        return uaddress;
+    }
+
+    public void setUaddress(String uaddress) {
+        this.uaddress = uaddress == null ? null : uaddress.trim();
     }
 }

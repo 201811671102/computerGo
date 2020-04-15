@@ -11,4 +11,5 @@ public interface OrderService {
     Order selectByOid(Integer oid)throws Exception;
     /*修改订单状态*/
     int updateOrderState(Order order)throws Exception;
+    /*uid查询订单*/
 }

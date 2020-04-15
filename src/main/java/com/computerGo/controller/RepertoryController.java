@@ -5,9 +5,8 @@ import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.pojo.Order;
 import com.computerGo.pojo.Package;
 import com.computerGo.pojo.UO;
-import com.computerGo.service.OrderService;
-import com.computerGo.service.PackageService;
-import com.computerGo.service.UOService;
+import com.computerGo.pojo.UR;
+import com.computerGo.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -39,6 +38,10 @@ public class RepertoryController {
     private OrderService orderService;
     @Autowired
     private UOService uoService;
+    @Autowired
+    private URService urService;
+    @Autowired
+    private UIService uiService;
 
 
     @PostMapping("/buyRepertory")
@@ -46,24 +49,36 @@ public class RepertoryController {
     @ApiOperation(value = "购买",notes = "500报错 404 没有余量")
     public ResultDTO buyRepertory(
             HttpServletRequest request,
+            @ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true)Integer rid,
             @ApiParam(value = "套餐id",required = true)@RequestParam(value = "pid",required = true)Integer pid,
-            @ApiParam(value = "购买数量",required = true)@RequestParam(value = "num",required = true)Integer num){
+            @ApiParam(value = "购买数量",required = true)@RequestParam(value = "num",required = true)Integer num,
+            @ApiParam(value = "送货地址",required = true)@RequestParam(value = "uaddress",required = true)String uaddress){
         try {
             Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
             Package packages = packageService.selectByPid(pid);
             if (StringUtils.isEmpty(packages) || packages == null){
                 return new ResultUtil().Error("400","售罄");
             }
+
+            //添加订单
             Order order = new Order();
             order.setState(0);
             order.setPid(pid);
             order.setTime(new Date());
             order.setNum(num);
+            order.setUaddress(uaddress);
             orderService.insertOrder(order);
+            //添加用户订单记录
             UO uo = new  UO();
             uo.setUid(uid);
             uo.setOid(order.getOid());
             uoService.insertUO(uo);
+            //添加商户订单记录
+            UR ur = urService.selectByRid(rid);
+            uo.setUid(ur.getUid());
+            uo.setOid(order.getOid());
+            uoService.insertUO(uo);
+            //修改套餐数量
             packages.setNumber(packages.getNumber()-1);
             packageService.updatePackage(packages);
             return new ResultUtil().Success();

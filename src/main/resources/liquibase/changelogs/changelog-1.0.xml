@@ -90,6 +90,9 @@
             <column name="state" type="integer(2)" encoding="utf8" remarks="订单状态" >
                 <constraints  nullable="false"></constraints>
             </column>
+            <column name="uaddress" type="varchar(150)" encoding="utf8" remarks="用户详细地址" >
+                <constraints  nullable="false"></constraints>
+            </column>
         </createTable><!--订单-->
         <createTable tableName="ur" >
             <column name="urid" type="integer(100)" encoding="utf8" remarks="商户库存id" autoIncrement="true">

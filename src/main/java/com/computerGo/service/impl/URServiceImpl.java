@@ -41,4 +41,16 @@ public class URServiceImpl implements URService {
         RowBounds rowBounds = new RowBounds(offset,limit);
         return urMapper.selectByExampleWithRowbounds(urExample,rowBounds);
     }
+
+    @Override
+    public UR selectByRid(Integer rid) {
+        URExample urExample = new URExample();
+        URExample.Criteria criteria = urExample.createCriteria();
+        criteria.andRidEqualTo(rid);
+        List<UR> urList = urMapper.selectByExample(urExample);
+        if(urList.isEmpty() || urList.size() == 0){
+            return null;
+        }
+        return urList.get(0);
+    }
 }

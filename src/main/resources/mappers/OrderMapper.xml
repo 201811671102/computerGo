@@ -7,6 +7,7 @@
     <result column="pid" jdbcType="INTEGER" property="pid" />
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="uaddress" jdbcType="VARCHAR" property="uaddress" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    oid, time, pid, num, state
+    oid, time, pid, num, state, uaddress
   </sql>
   <select id="selectByExample" parameterType="com.computerGo.pojo.OrderExample" resultMap="BaseResultMap">
     select
@@ -104,9 +105,9 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into order (time, pid, num, 
-      state)
+      state, uaddress)
     values (#{time,jdbcType=TIMESTAMP}, #{pid,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
-      #{state,jdbcType=INTEGER})
+      #{state,jdbcType=INTEGER}, #{uaddress,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.computerGo.pojo.Order">
     <selectKey keyProperty="oid" order="AFTER" resultType="java.lang.Integer">
@@ -126,6 +127,9 @@
       <if test="state != null">
         state,
       </if>
+      <if test="uaddress != null">
+        uaddress,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="time != null">
@@ -139,6 +143,9 @@
       </if>
       <if test="state != null">
         #{state,jdbcType=INTEGER},
+      </if>
+      <if test="uaddress != null">
+        #{uaddress,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -166,6 +173,9 @@
       <if test="record.state != null">
         state = #{record.state,jdbcType=INTEGER},
       </if>
+      <if test="record.uaddress != null">
+        uaddress = #{record.uaddress,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -177,7 +187,8 @@
       time = #{record.time,jdbcType=TIMESTAMP},
       pid = #{record.pid,jdbcType=INTEGER},
       num = #{record.num,jdbcType=INTEGER},
-      state = #{record.state,jdbcType=INTEGER}
+      state = #{record.state,jdbcType=INTEGER},
+      uaddress = #{record.uaddress,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,6 +208,9 @@
       <if test="state != null">
         state = #{state,jdbcType=INTEGER},
       </if>
+      <if test="uaddress != null">
+        uaddress = #{uaddress,jdbcType=VARCHAR},
+      </if>
     </set>
     where oid = #{oid,jdbcType=INTEGER}
   </update>
@@ -205,7 +219,8 @@
     set time = #{time,jdbcType=TIMESTAMP},
       pid = #{pid,jdbcType=INTEGER},
       num = #{num,jdbcType=INTEGER},
-      state = #{state,jdbcType=INTEGER}
+      state = #{state,jdbcType=INTEGER},
+      uaddress = #{uaddress,jdbcType=VARCHAR}
     where oid = #{oid,jdbcType=INTEGER}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="com.computerGo.pojo.OrderExample" resultMap="BaseResultMap">
