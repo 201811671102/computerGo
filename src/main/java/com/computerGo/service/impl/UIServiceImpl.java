@@ -21,15 +21,11 @@ public class UIServiceImpl implements UIService {
     private UIMapper uiMapper;
 
     @Override
-    public UI selectByUid(Integer uid) throws Exception {
+    public List<UI> selectByUid(Integer uid) throws Exception {
         UIExample uiExample = new UIExample();
         UIExample.Criteria criteria = uiExample.createCriteria();
         criteria.andUidEqualTo(uid);
-        List<UI> uiList = uiMapper.selectByExample(uiExample);
-        if (uiList.isEmpty() || uiList.size() == 0){
-            return null;
-        }
-        return uiList.get(0);
+        return uiMapper.selectByExample(uiExample);
     }
 
     @Override

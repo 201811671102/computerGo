@@ -13,4 +13,7 @@ public interface UOService {
     List<UO> selectByOid(Integer oid,int offset,int limit)throws Exception;
     /*uid查询用户订单记录*/
     List<UO> selectByUid(Integer uid,int offset,int limit)throws Exception;
+    /*oid查询购买人数*/
+    long getCount(Integer oid)throws Exception;
+
 }

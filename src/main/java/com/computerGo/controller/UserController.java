@@ -8,6 +8,7 @@ import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.base.utils.WechatUtil;
 import com.computerGo.pojo.Identity;
 import com.computerGo.pojo.UI;
+import com.computerGo.pojo.UR;
 import com.computerGo.pojo.User;
 import com.computerGo.service.IdentityService;
 import com.computerGo.service.UIService;
@@ -20,6 +21,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName UserController
@@ -37,10 +40,15 @@ public class UserController {
     private UIService uiService;
     @Autowired
     private IdentityService identityService;
+    @GetMapping("/message")
+    @ResponseBody
+    @ApiOperation(value = "message")
+    public ResultDTO message(HttpServletRequest request){
+        request.getSession().setAttribute("uid","1");
+        return new ResultUtil().Success(request.getSession().getAttribute("uid"));
+    }
 
-    /**
-     * 微信用户登录详情
-     */
+
     @PostMapping("/login")
     @ResponseBody
     @ApiOperation(value = "登录",notes = "role 0普通用户 1 商户")
@@ -72,14 +80,22 @@ public class UserController {
                 userDto.setUserDto(user);
                 userDto.setRole(0);
             } else {
-                UI ui = uiService.selectByUid(user.getUid());
-                Identity identity = identityService.selectByIid(ui.getIid());
+                List<UI> uiList = uiService.selectByUid(user.getUid());
+                List<Identity> identities = new ArrayList<>();
+                Boolean b = true;
                 userDto.setUserDto(user);
-                if (StringUtils.isEmpty(identity.getUidcard())){
-                    userDto.setRole(0);
-                }else{
+                for (UI ui : uiList){
+                    Identity identity = identityService.selectByIid(ui.getIid());
+                    if (!StringUtils.isEmpty(identity.getUidcard())){
+                        b = false;
+                    }
+                    identities.add(identity);
+                }
+                userDto.setRole(0);
+                if (!b){
                     userDto.setRole(1);
                 }
+                userDto.setIdentityList(identities);
             }
             request.getSession().setAttribute("uid",userDto.getUid());
             return new ResultUtil().Success(userDto);

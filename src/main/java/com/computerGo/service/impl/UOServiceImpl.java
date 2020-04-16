@@ -50,4 +50,12 @@ public class UOServiceImpl implements UOService {
         RowBounds rowBounds = new RowBounds(offset,limit);
         return uoMapper.selectByExampleWithRowbounds(uoExample,rowBounds);
     }
+
+    @Override
+    public long getCount(Integer oid) throws Exception {
+        UOExample uoExample = new UOExample();
+        UOExample.Criteria criteria = uoExample.createCriteria();
+        criteria.andOidEqualTo(oid);
+        return uoMapper.countByExample(uoExample);
+    }
 }

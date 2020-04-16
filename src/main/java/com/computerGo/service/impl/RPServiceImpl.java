@@ -57,4 +57,16 @@ public class RPServiceImpl implements RPService {
         RowBounds rowBounds = new RowBounds(offset,limit);
         return rpMapper.selectByExampleWithRowbounds(rpExample,rowBounds);
     }
+
+    @Override
+    public RP selectBypid(Integer pid) throws Exception {
+        RPExample rpExample = new RPExample();
+        RPExample.Criteria criteria = rpExample.createCriteria();
+        criteria.andPidEqualTo(pid);
+        List<RP> rpList = rpMapper.selectByExample(rpExample);
+        if (rpList.isEmpty() || rpList.size() == 0){
+            return null;
+        }
+        return rpList.get(0);
+    }
 }

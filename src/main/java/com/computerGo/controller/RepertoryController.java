@@ -2,8 +2,8 @@ package com.computerGo.controller;
 
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
-import com.computerGo.pojo.Order;
 import com.computerGo.pojo.Package;
+import com.computerGo.pojo.Theorder;
 import com.computerGo.pojo.UO;
 import com.computerGo.pojo.UR;
 import com.computerGo.service.*;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+
 /**
  * @ClassName RepertoryController
  * @Description TODO
@@ -35,7 +36,7 @@ public class RepertoryController {
     @Autowired
     private PackageService packageService;
     @Autowired
-    private OrderService orderService;
+    private TheorderService orderService;
     @Autowired
     private UOService uoService;
     @Autowired
@@ -59,30 +60,30 @@ public class RepertoryController {
             if (StringUtils.isEmpty(packages) || packages == null){
                 return new ResultUtil().Error("400","售罄");
             }
-
             //添加订单
-            Order order = new Order();
-            order.setState(0);
-            order.setPid(pid);
-            order.setTime(new Date());
-            order.setNum(num);
-            order.setUaddress(uaddress);
-            orderService.insertOrder(order);
+            Theorder theorder = new Theorder();
+            theorder.setState(0);
+            theorder.setPid(pid);
+            theorder.setOrdertime(new Date());
+            theorder.setNum(num);
+            theorder.setUaddress(uaddress);
+            orderService.insertOrder(theorder);
             //添加用户订单记录
             UO uo = new  UO();
             uo.setUid(uid);
-            uo.setOid(order.getOid());
+            uo.setOid(theorder.getOid());
             uoService.insertUO(uo);
             //添加商户订单记录
             UR ur = urService.selectByRid(rid);
             uo.setUid(ur.getUid());
-            uo.setOid(order.getOid());
+            uo.setOid(theorder.getOid());
             uoService.insertUO(uo);
             //修改套餐数量
             packages.setNumber(packages.getNumber()-1);
             packageService.updatePackage(packages);
             return new ResultUtil().Success();
         }catch (Exception e){
+            e.printStackTrace();
             return new ResultUtil().Error("500",e.toString());
         }
     }

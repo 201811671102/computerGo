@@ -2,20 +2,17 @@ package com.computerGo.controller;
 
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
-import com.computerGo.pojo.Order;
-import com.computerGo.pojo.UO;
-import com.computerGo.pojo.UR;
-import com.computerGo.service.OrderService;
+import com.computerGo.pojo.*;
+import com.computerGo.service.TheorderService;
+import com.computerGo.service.RPService;
+import com.computerGo.service.RepertoryService;
 import com.computerGo.service.UOService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -34,11 +31,15 @@ public class UOController {
     @Autowired
     private UOService uoService;
     @Autowired
-    private OrderService orderService;
+    private TheorderService orderService;
+    @Autowired
+    private RPService rpService;
+    @Autowired
+    private RepertoryService repertoryService;
 
     @GetMapping("/getUO")
     @ResponseBody
-    @ApiOperation(value = "获取用户消费记录|商户订单记录",notes = "500报错")
+    @ApiOperation(value = " 订单状态 0 待发货 1 已签收  2已评价 获取用户消费记录|商户订单记录",notes = "500报错")
     public ResultDTO getUO(
             HttpServletRequest request,
             @ApiParam(value = "订单状态",required = true)@RequestParam(value = "state",required = true)Integer state,
@@ -47,20 +48,61 @@ public class UOController {
         try {
             Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
             List<UO> uoList = uoService.selectByUid(uid,offset,limit);
-            List<Order> orderList = new ArrayList<>();
+            List<Theorder> theorderList = new ArrayList<>();
             for (UO uo : uoList){
                 try {
-                    Order order = orderService.selectByOid(uo.getOid());
-                    if (order.getState() == state) {
-                        orderList.add(order);
+                    Theorder theorder = orderService.selectByOid(uo.getOid());
+                    if (theorder.getState() == state) {
+                        theorderList.add(theorder);
                     }
                 }catch (Exception e){
                     continue;
                 }
             }
-            return new ResultUtil().Success(orderList);
+            return new ResultUtil().Success(theorderList);
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }
+    }
+
+    @PutMapping("/signover")
+    @ResponseBody
+    @ApiOperation(value = "用户签收",notes = "500报错")
+    public ResultDTO signover(
+            HttpServletRequest request,
+            @ApiParam(value = "订单id",required = true)@RequestParam(value = "oid",required = true) int oid){
+        try {
+            Theorder theorder = new Theorder();
+            theorder.setOid(oid);
+            theorder.setState(1);
+            orderService.updateOrderState(theorder);
+            return new ResultUtil().Success();
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
+
+    @PutMapping("/setEvaluation")
+    @ResponseBody
+    @ApiOperation(value = "用户评价",notes = "500报错")
+    public ResultDTO setEvaluation(
+            HttpServletRequest request,
+            @ApiParam(value = "订单id",required = true)@RequestParam(value = "oid",required = true) int oid,
+            @ApiParam(value = "套餐id",required = true)@RequestParam(value = "pid",required = true) int pid,
+            @ApiParam(value = "评价",required = true)@RequestParam(value = "ealeuation",required = true) int ealeuation){
+            try {
+                Theorder theorder = new Theorder();
+                theorder.setState(2);
+                RP rp = rpService.selectBypid(pid);
+                Repertory repertory = repertoryService.selectByRid(rp.getRid());
+                long count = uoService.getCount(oid);
+                repertory.setEvaluation((int) (Math.round((count * repertory.getEvaluation())+ealeuation)/(count+1)));
+                repertoryService.changeByRid(repertory);
+                orderService.updateOrderState(theorder);
+                return new ResultUtil().Success(repertory.getEvaluation());
+            }catch (Exception e){
+                return new ResultUtil().Error("500",e.toString());
+            }
     }
 }
