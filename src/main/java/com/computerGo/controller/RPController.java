@@ -91,12 +91,19 @@ public class RPController {
                     RepertoryDTO repertoryDTO = new RepertoryDTO();
                     repertoryDTO.setRepertoryDTO(repertory);
                     List<Package> packages = new ArrayList<>();
+                    boolean b=true;
                     for (RP rp : rpService.selectByRid(repertory.getRid())){
+                        if (rp.getType() != 0){
+                            b=false;
+                            break;
+                        }
                         packages.add(packageService.selectByPid(rp.getPid()));
                     }
                     repertoryDTO.setPackageList(packages);
                     repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
-                    repertoryDTOS.add(repertoryDTO);
+                    if (b){
+                        repertoryDTOS.add(repertoryDTO);
+                    }
                 }catch (Exception e){
                     continue;
                 }

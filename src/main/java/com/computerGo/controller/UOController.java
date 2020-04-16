@@ -39,7 +39,7 @@ public class UOController {
 
     @GetMapping("/getUO")
     @ResponseBody
-    @ApiOperation(value = " 订单状态 0 待发货 1 已签收  2已评价 获取用户消费记录|商户订单记录",notes = "500报错")
+    @ApiOperation(value = " 订单状态 0 待发货 1已发货 2 已签收  3已评价 获取用户消费记录|商户订单记录",notes = "500报错")
     public ResultDTO getUO(
             HttpServletRequest request,
             @ApiParam(value = "订单状态",required = true)@RequestParam(value = "state",required = true)Integer state,
@@ -67,12 +67,10 @@ public class UOController {
             return new ResultUtil().Error("500",e.toString());
         }
     }
-
-    @PutMapping("/signover")
+    @PutMapping("/delivered")
     @ResponseBody
-    @ApiOperation(value = "用户签收",notes = "500报错")
-    public ResultDTO signover(
-            HttpServletRequest request,
+    @ApiOperation(value = "商户已经发货",notes = "500报错")
+    public ResultDTO delivered(
             @ApiParam(value = "订单id",required = true)@RequestParam(value = "oid",required = true) int oid){
         try {
             Theorder theorder = new Theorder();
@@ -85,18 +83,33 @@ public class UOController {
         }
     }
 
+    @PutMapping("/signover")
+    @ResponseBody
+    @ApiOperation(value = "用户签收",notes = "500报错")
+    public ResultDTO signover(
+            @ApiParam(value = "订单id",required = true)@RequestParam(value = "oid",required = true) int oid){
+        try {
+            Theorder theorder = new Theorder();
+            theorder.setOid(oid);
+            theorder.setState(2);
+            orderService.updateOrderState(theorder);
+            return new ResultUtil().Success();
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
 
     @PutMapping("/setEvaluation")
     @ResponseBody
     @ApiOperation(value = "用户评价",notes = "500报错")
     public ResultDTO setEvaluation(
-            HttpServletRequest request,
             @ApiParam(value = "订单id",required = true)@RequestParam(value = "oid",required = true) int oid,
             @ApiParam(value = "套餐id",required = true)@RequestParam(value = "pid",required = true) int pid,
             @ApiParam(value = "评价",required = true)@RequestParam(value = "ealeuation",required = true) int ealeuation){
             try {
                 Theorder theorder = new Theorder();
-                theorder.setState(2);
+                theorder.setState(3);
                 RP rp = rpService.selectBypid(pid);
                 Repertory repertory = repertoryService.selectByRid(rp.getRid());
                 long count = uoService.getCount(oid);
