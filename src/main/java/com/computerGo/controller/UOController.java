@@ -1,12 +1,10 @@
 package com.computerGo.controller;
 
+import com.computerGo.DTO.TheorderDTO;
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.pojo.*;
-import com.computerGo.service.TheorderService;
-import com.computerGo.service.RPService;
-import com.computerGo.service.RepertoryService;
-import com.computerGo.service.UOService;
+import com.computerGo.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +34,8 @@ public class UOController {
     private RPService rpService;
     @Autowired
     private RepertoryService repertoryService;
+    @Autowired
+    private PackageService packageService;
 
     @GetMapping("/getUO")
     @ResponseBody
@@ -48,18 +48,21 @@ public class UOController {
         try {
             Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
             List<UO> uoList = uoService.selectByUid(uid,offset,limit);
-            List<Theorder> theorderList = new ArrayList<>();
+            List<TheorderDTO> theorderDTOList = new ArrayList<>();
             for (UO uo : uoList){
                 try {
-                    Theorder theorder = orderService.selectByOid(uo.getOid());
-                    if (theorder.getState() == state) {
-                        theorderList.add(theorder);
+                    TheorderDTO theorderDTO  = new TheorderDTO();
+                    theorderDTO.SetTheorderDTO(orderService.selectByOid(uo.getOid()));
+                    if (theorderDTO.getState() == state) {
+                        theorderDTO.setNewPackage(packageService.selectByPid(theorderDTO.getPid()));
+                        theorderDTO.setRepertory(repertoryService.selectByRid(rpService.selectBypid(theorderDTO.getPid()).getRid()));
+                        theorderDTOList.add(theorderDTO);
                     }
                 }catch (Exception e){
                     continue;
                 }
             }
-            return new ResultUtil().Success(theorderList);
+            return new ResultUtil().Success(theorderDTOList);
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }

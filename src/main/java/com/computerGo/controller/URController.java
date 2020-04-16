@@ -49,6 +49,7 @@ public class URController {
     @Autowired
     private RPService rpService;
 
+
     @GetMapping("/myrepertory")
     @ResponseBody
     @ApiOperation(value = "获取商户商品",notes = "500报错")
@@ -67,6 +68,12 @@ public class URController {
                 try {
                     repertoryDTO.setRepertoryDTO(repertoryService.selectByRid(ur.getRid()));
                     repertoryDTO.setWatched(redisUtil.get(ur.getRid().toString()).toString());
+                    List<RP> rpList = rpService.selectByRid(ur.getRid());
+                    List<Package> packageList = new ArrayList<>();
+                    for (RP rp : rpList){
+                        packageList.add(packageService.selectByPid(rp.getPid()));
+                    }
+                    repertoryDTO.setPackageList(packageList);
                 }catch (Exception e){
                     continue;
                 }

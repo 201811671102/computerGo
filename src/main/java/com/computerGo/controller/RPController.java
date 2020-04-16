@@ -5,9 +5,11 @@ import com.computerGo.DTO.RepertoryDTO;
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.base.redis.RedisUtil;
+import com.computerGo.pojo.Package;
 import com.computerGo.pojo.RP;
 import com.computerGo.pojo.Repertory;
 import com.computerGo.pojo.UR;
+import com.computerGo.service.PackageService;
 import com.computerGo.service.RPService;
 import com.computerGo.service.RepertoryService;
 import com.computerGo.service.URService;
@@ -40,6 +42,8 @@ public class RPController {
     private RepertoryService repertoryService;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private PackageService packageService;
 
 
     @GetMapping("/getrepertory")
@@ -57,6 +61,11 @@ public class RPController {
                 RepertoryDTO repertoryDTO = new RepertoryDTO();
                 try {
                     repertoryDTO.setRepertoryDTO(repertoryService.selectByRid(rp.getRid()));
+                    List<Package> packageList = new ArrayList<>();
+                    for (RP newrp : rpService.selectByRid(rp.getRid())){
+                        packageList.add(packageService.selectByPid(newrp.getPid()));
+                    }
+                    repertoryDTO.setPackageList(packageList);
                     repertoryDTO.setWatched(redisUtil.get(rp.getRid().toString()).toString());
                 }catch (Exception e){
                     continue;

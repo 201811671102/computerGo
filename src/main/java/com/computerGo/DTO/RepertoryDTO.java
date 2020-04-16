@@ -1,5 +1,6 @@
 package com.computerGo.DTO;
 
+import com.computerGo.pojo.Package;
 import com.computerGo.pojo.Repertory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,8 @@ public class RepertoryDTO extends Repertory {
     private String watched;
     //照片列表
     private List<String> photolist;
+    //套餐信息
+    private List<Package> packageList;
 
     public void setRepertoryDTO(Repertory repertory){
         this.setRid(repertory.getRid());
