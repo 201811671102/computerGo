@@ -173,4 +173,17 @@ public class URController {
         }
     }
 
+    @PutMapping("/deleteRepertory")
+    @ResponseBody
+    @ApiOperation(value = "删除库存",notes = "500报错")
+    public ResultDTO deleteRepertory(@ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true)Integer rid){
+        try {
+            urService.deleteByRid(rid);
+            redisUtil.del(rid.toString());
+            return new ResultUtil().Success();
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
 }

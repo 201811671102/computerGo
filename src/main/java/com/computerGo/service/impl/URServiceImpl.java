@@ -34,7 +34,7 @@ public class URServiceImpl implements URService {
     }
 
     @Override
-    public List<UR> selectByUid(Integer uid, int offset, int limit) {
+    public List<UR> selectByUid(Integer uid, int offset, int limit)throws Exception {
         URExample urExample = new URExample();
         URExample.Criteria criteria = urExample.createCriteria();
         criteria.andUidEqualTo(uid);
@@ -43,7 +43,7 @@ public class URServiceImpl implements URService {
     }
 
     @Override
-    public UR selectByRid(Integer rid) {
+    public UR selectByRid(Integer rid) throws Exception{
         URExample urExample = new URExample();
         URExample.Criteria criteria = urExample.createCriteria();
         criteria.andRidEqualTo(rid);

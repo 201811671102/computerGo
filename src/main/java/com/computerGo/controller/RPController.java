@@ -8,11 +8,9 @@ import com.computerGo.base.redis.RedisUtil;
 import com.computerGo.pojo.Package;
 import com.computerGo.pojo.RP;
 import com.computerGo.pojo.Repertory;
-import com.computerGo.pojo.UR;
 import com.computerGo.service.PackageService;
 import com.computerGo.service.RPService;
 import com.computerGo.service.RepertoryService;
-import com.computerGo.service.URService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -71,6 +69,37 @@ public class RPController {
                     continue;
                 }
                 repertoryDTOS.add(repertoryDTO);
+            }
+            return new ResultUtil().Success(repertoryDTOS);
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
+    @GetMapping("/getRepertoryByTitle")
+    @ResponseBody
+    @ApiOperation(value = "根据标题获取库存",notes = "500报错")
+    public ResultDTO getRepertoryByTitle(
+            @ApiParam(value = "标题",required = true) @RequestParam(value = "title",required = true) String title,
+            @ApiParam(value = "起始位置",required = true)@RequestParam(value = "offset",required = true) int offset,
+            @ApiParam(value = "数据条数",required = true)@RequestParam(value = "limit",required = true) int limit){
+        try {
+            List<Repertory> repertoryList = repertoryService.selectByTitle(title,offset,limit);
+            List<RepertoryDTO> repertoryDTOS = new ArrayList<>();
+            for (Repertory repertory : repertoryList){
+                try {
+                    RepertoryDTO repertoryDTO = new RepertoryDTO();
+                    repertoryDTO.setRepertoryDTO(repertory);
+                    List<Package> packages = new ArrayList<>();
+                    for (RP rp : rpService.selectByRid(repertory.getRid())){
+                        packages.add(packageService.selectByPid(rp.getPid()));
+                    }
+                    repertoryDTO.setPackageList(packages);
+                    repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
+                    repertoryDTOS.add(repertoryDTO);
+                }catch (Exception e){
+                    continue;
+                }
             }
             return new ResultUtil().Success(repertoryDTOS);
         }catch (Exception e){

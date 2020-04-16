@@ -11,7 +11,7 @@ public interface URService {
     /*rid删除商品库存*/
     int deleteByRid(Integer rid)throws Exception;
    /*uid查询商品库存*/
-    List<UR> selectByUid(Integer uid,int offset,int limit);
+    List<UR> selectByUid(Integer uid,int offset,int limit)throws Exception;
     /*pid查询商品供应商*/
-    UR selectByRid(Integer rid);
+    UR selectByRid(Integer rid)throws Exception;
 }

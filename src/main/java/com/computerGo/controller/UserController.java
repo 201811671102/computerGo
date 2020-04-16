@@ -40,14 +40,20 @@ public class UserController {
     private UIService uiService;
     @Autowired
     private IdentityService identityService;
-    @GetMapping("/message")
+    @GetMapping("/message1")
     @ResponseBody
-    @ApiOperation(value = "message")
-    public ResultDTO message(HttpServletRequest request){
+    @ApiOperation(value = "message1")
+    public ResultDTO message1(HttpServletRequest request){
         request.getSession().setAttribute("uid","1");
         return new ResultUtil().Success(request.getSession().getAttribute("uid"));
     }
-
+    @GetMapping("/message2")
+    @ResponseBody
+    @ApiOperation(value = "message2")
+    public ResultDTO message2(HttpServletRequest request){
+        request.getSession().setAttribute("uid","2");
+        return new ResultUtil().Success(request.getSession().getAttribute("uid"));
+    }
 
     @PostMapping("/login")
     @ResponseBody
