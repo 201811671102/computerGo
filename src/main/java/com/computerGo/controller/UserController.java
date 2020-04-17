@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -40,6 +42,8 @@ public class UserController {
     private UIService uiService;
     @Autowired
     private IdentityService identityService;
+
+
     @GetMapping("/message1")
     @ResponseBody
     @ApiOperation(value = "message1")
@@ -94,6 +98,7 @@ public class UserController {
                     Identity identity = identityService.selectByIid(ui.getIid());
                     if (!StringUtils.isEmpty(identity.getUidcard())){
                         b = false;
+                        continue;
                     }
                     identities.add(identity);
                 }
@@ -105,6 +110,34 @@ public class UserController {
             }
             request.getSession().setAttribute("uid",userDto.getUid());
             return new ResultUtil().Success(userDto);
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
+    @PostMapping("/usersignin")
+    @ResponseBody
+    @ApiOperation(value = "商户注册")
+    public ResultDTO usersignin(
+            HttpServletRequest request,
+            @ApiParam(value = "姓名",required = true)@RequestParam(value = "uname",required = true)String uname,
+            @ApiParam(value = "电话",required = true)@RequestParam(value = "uphone",required = true)String uphone,
+            @ApiParam(value = "身份证",required = true)@RequestParam(value = "uidcard",required = true)String uidcard,
+            @ApiParam(value = "详细地址",required = true)@RequestParam(value = "uaddress",required = true)String uaddress
+    ){
+        try {
+            Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
+            Identity identity = new Identity();
+            identity.setUname(uname);
+            identity.setUphone(uphone);
+            identity.setUaddress(uaddress);
+            identity.setUidcard(new BASE64Decoder().decodeBuffer(uidcard).toString());
+            identityService.insertIdentity(identity);
+            UI ui = new UI();
+            ui.setUid(uid);
+            ui.setIid(identity.getIid());
+            uiService.insertUI(ui);
+            return new ResultUtil().Success();
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }

@@ -41,13 +41,12 @@ public class RepertoryController {
     private UOService uoService;
     @Autowired
     private URService urService;
-    @Autowired
-    private UIService uiService;
+
 
 
     @PostMapping("/buyRepertory")
     @ResponseBody
-    @ApiOperation(value = "购买",notes = "500报错 404 没有余量")
+    @ApiOperation(value = "购买",notes = "500报错 404 没有余量 403 商户购买自己发布的商品")
     public ResultDTO buyRepertory(
             HttpServletRequest request,
             @ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true)Integer rid,
@@ -56,6 +55,10 @@ public class RepertoryController {
             @ApiParam(value = "送货地址",required = true)@RequestParam(value = "uaddress",required = true)String uaddress){
         try {
             Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
+            UR ur = urService.selectByRid(rid);
+            if(uid == ur.getUid()){
+                return new ResultUtil().Error("403","禁止刷单");
+            }
             Package packages = packageService.selectByPid(pid);
             if (StringUtils.isEmpty(packages) || packages == null){
                 return new ResultUtil().Error("400","售罄");
@@ -67,6 +70,7 @@ public class RepertoryController {
             theorder.setOrdertime(new Date());
             theorder.setNum(num);
             theorder.setUaddress(uaddress);
+            theorder.setRid(rid);
             orderService.insertOrder(theorder);
             //添加用户订单记录
             UO uo = new  UO();
@@ -74,7 +78,6 @@ public class RepertoryController {
             uo.setOid(theorder.getOid());
             uoService.insertUO(uo);
             //添加商户订单记录
-            UR ur = urService.selectByRid(rid);
             uo.setUid(ur.getUid());
             uo.setOid(theorder.getOid());
             uoService.insertUO(uo);

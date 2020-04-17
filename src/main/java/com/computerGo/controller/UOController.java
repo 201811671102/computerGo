@@ -29,7 +29,7 @@ public class UOController {
     @Autowired
     private UOService uoService;
     @Autowired
-    private TheorderService orderService;
+    private TheorderService theorderService;
     @Autowired
     private RPService rpService;
     @Autowired
@@ -52,10 +52,10 @@ public class UOController {
             for (UO uo : uoList){
                 try {
                     TheorderDTO theorderDTO  = new TheorderDTO();
-                    theorderDTO.SetTheorderDTO(orderService.selectByOid(uo.getOid()));
+                    theorderDTO.SetTheorderDTO(theorderService.selectByOid(uo.getOid()));
                     if (theorderDTO.getState() == state) {
                         theorderDTO.setNewPackage(packageService.selectByPid(theorderDTO.getPid()));
-                        theorderDTO.setRepertory(repertoryService.selectByRid(rpService.selectBypid(theorderDTO.getPid()).getRid()));
+                        theorderDTO.setRepertory(repertoryService.selectByRid(theorderDTO.getRid()));
                         theorderDTOList.add(theorderDTO);
                     }
                 }catch (Exception e){
@@ -76,7 +76,7 @@ public class UOController {
             Theorder theorder = new Theorder();
             theorder.setOid(oid);
             theorder.setState(1);
-            orderService.updateOrderState(theorder);
+            theorderService.updateOrderState(theorder);
             return new ResultUtil().Success();
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
@@ -92,7 +92,7 @@ public class UOController {
             Theorder theorder = new Theorder();
             theorder.setOid(oid);
             theorder.setState(2);
-            orderService.updateOrderState(theorder);
+            theorderService.updateOrderState(theorder);
             return new ResultUtil().Success();
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
@@ -109,14 +109,15 @@ public class UOController {
             @ApiParam(value = "评价",required = true)@RequestParam(value = "ealeuation",required = true) int ealeuation){
             try {
                 Theorder theorder = new Theorder();
+                theorder.setOid(oid);
                 theorder.setState(3);
                 RP rp = rpService.selectBypid(pid);
                 Repertory repertory = repertoryService.selectByRid(rp.getRid());
                 long count = uoService.getCount(oid);
                 repertory.setEvaluation((int) (Math.round((count * repertory.getEvaluation())+ealeuation)/(count+1)));
                 repertoryService.changeByRid(repertory);
-                orderService.updateOrderState(theorder);
-                return new ResultUtil().Success(repertory.getEvaluation());
+                theorderService.updateOrderState(theorder);
+                return new ResultUtil().Success();
             }catch (Exception e){
                 return new ResultUtil().Error("500",e.toString());
             }

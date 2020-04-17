@@ -23,6 +23,7 @@ public class TheorderDTO extends Theorder {
         this.setOid(theorder.getOid());
         this.setOrdertime(theorder.getOrdertime());
         this.setPid(theorder.getPid());
+        this.setRid(theorder.getRid());
         this.setNum(theorder.getNum());
         this.setState(theorder.getState());
         this.setUaddress(theorder.getUaddress());

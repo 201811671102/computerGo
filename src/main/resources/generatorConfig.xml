@@ -43,7 +43,7 @@
         </javaClientGenerator>
 
 
-       <!-- <table schema="computerGo" tableName="user" enableCountByExample="true" domainObjectName="User">
+        <table schema="computerGo" tableName="user" enableCountByExample="true" domainObjectName="User">
             <generatedKey column="uid" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="apply_for" javaType="com.jd.ins.personal.claim.domain.enums.ApplyForType" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         </table>
@@ -58,12 +58,12 @@
         <table schema="computerGo" tableName="package" enableCountByExample="true" domainObjectName="Package">
             <generatedKey column="pid" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="apply_for" javaType="com.jd.ins.personal.claim.domain.enums.ApplyForType" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-        </table>-->
+        </table>
         <table schema="computerGo" tableName="theorder" enableCountByExample="true" domainObjectName="Theorder">
             <generatedKey column="oid" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="apply_for" javaType="com.jd.ins.personal.claim.domain.enums.ApplyForType" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         </table>
-      <!--  <table schema="computerGo" tableName="ur" enableCountByExample="true" domainObjectName="UR">
+        <table schema="computerGo" tableName="ur" enableCountByExample="true" domainObjectName="UR">
             <generatedKey column="urid" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="apply_for" javaType="com.jd.ins.personal.claim.domain.enums.ApplyForType" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
         </table>
@@ -78,6 +78,6 @@
         <table schema="computerGo" tableName="uo" enableCountByExample="true" domainObjectName="UO">
             <generatedKey column="uoid" sqlStatement="Mysql" identity="true"/>
             <columnOverride column="apply_for" javaType="com.jd.ins.personal.claim.domain.enums.ApplyForType" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
-        </table>-->
+        </table>
     </context>
 </generatorConfiguration>

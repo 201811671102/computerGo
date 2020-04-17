@@ -32,4 +32,12 @@ public class UIServiceImpl implements UIService {
     public int insertUI(UI ui) throws Exception {
         return uiMapper.insertSelective(ui);
     }
+
+    @Override
+    public int deleteByIid(Integer iid) throws Exception {
+        UIExample uiExample = new UIExample();
+        UIExample.Criteria criteria = uiExample.createCriteria();
+        criteria.andIidEqualTo(iid);
+        return uiMapper.deleteByExample(uiExample);
+    }
 }

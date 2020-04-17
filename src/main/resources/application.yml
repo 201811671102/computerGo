@@ -66,9 +66,10 @@ mybatis:
 
 logging:
   level:
-    pre.cg.mapper: debug #指定类的日志级别
+    com.computerGo.mapper: debug #指定类的日志级别
   path: logs/ #指定日志生成路径
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n" #控制台输出日志格式
     file: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n "#文件输出日志格式
-
+server:
+  port: 9090

@@ -81,6 +81,9 @@
             <column name="ordertime" type="timestamp" encoding="utf8" remarks="订单时间">
                 <constraints  nullable="false"></constraints>
             </column>
+            <column name="rid" type="integer(100)" encoding="utf8" remarks="库存id" >
+                <constraints  nullable="false"></constraints>
+            </column>
             <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" >
                 <constraints  nullable="false"></constraints>
             </column>

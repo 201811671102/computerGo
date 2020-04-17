@@ -29,7 +29,7 @@ public class RepertoryServiceImpl implements RepertoryService {
     public List<Repertory> selectByTitle(String title,int offset, int limit)throws Exception {
         RepertoryExample repertoryExample = new RepertoryExample();
         RepertoryExample.Criteria criteria = repertoryExample.createCriteria();
-        criteria.andTitleEqualTo(title);
+        criteria.andTitleLike("%"+title+"%");
         RowBounds rowBounds = new RowBounds(offset,limit);
         return repertoryMapper.selectByExampleWithRowbounds(repertoryExample,rowBounds);
     }

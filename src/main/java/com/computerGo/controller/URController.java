@@ -16,6 +16,7 @@ import com.computerGo.service.URService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sun.misc.MessageUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,9 @@ public class URController {
                     List<RP> rpList = rpService.selectByRid(ur.getRid());
                     List<Package> packageList = new ArrayList<>();
                     for (RP rp : rpList){
-                        packageList.add(packageService.selectByPid(rp.getPid()));
+                        if (rp.getType() == type){
+                            packageList.add(packageService.selectByPid(rp.getPid()));
+                        }
                     }
                     repertoryDTO.setPackageList(packageList);
                 }catch (Exception e){
@@ -101,12 +105,11 @@ public class URController {
             StringBuilder photo = new StringBuilder();
             for (int i = photoarr.length ; i >0 ; i--){
                 try {
-                    photoarr[i].getName();
-                    photoarr[i].getOriginalFilename();
-                    photoarr[i].getContentType();
                     String phototype = photoarr[i].getOriginalFilename().substring(photoarr[i].getOriginalFilename().lastIndexOf("."));
-                    String name = System.currentTimeMillis()+"."+phototype;
-                    boolean b = ftpOperation.uploadToFtp(photoarr[i].getInputStream(),name,"/computerGo");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    String path = simpleDateFormat.format(System.currentTimeMillis());
+                    String name = path+"/"+System.currentTimeMillis()+"."+phototype;
+                    boolean b = ftpOperation.uploadToFtp(photoarr[i].getInputStream(),name,"/photo/computerGo/"+path);
                     if(!b){
                         return new ResultUtil().Error("400",photoarr[i].getOriginalFilename()+"文件上传失败");
                     }
@@ -128,7 +131,10 @@ public class URController {
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }
-    }@PostMapping("/addpackage")
+    }
+
+
+    @PostMapping("/addpackage")
     @ResponseBody
     @ApiOperation(value = "添加套餐",notes = "500报错 ")
     public ResultDTO addpackage(
@@ -173,12 +179,13 @@ public class URController {
         }
     }
 
-    @PutMapping("/deleteRepertory")
+    @DeleteMapping("/deleteRepertory")
     @ResponseBody
     @ApiOperation(value = "删除库存",notes = "500报错")
     public ResultDTO deleteRepertory(@ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true)Integer rid){
         try {
             urService.deleteByRid(rid);
+            rpService.deleteByRid(rid);
             redisUtil.del(rid.toString());
             return new ResultUtil().Success();
         }catch (Exception e){
@@ -186,4 +193,67 @@ public class URController {
         }
     }
 
+
+    @PutMapping("/changerepertory")
+    @ResponseBody
+    @ApiOperation(value = "修改库存",notes = "500报错 400 文件上传失败 文件先上传套餐信息")
+    public ResultDTO changerepertory(
+            HttpServletRequest request,
+            @ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true) Integer rid,
+            @ApiParam(value = "库存标题",required = false)@RequestParam(value = "title",required = false) String title,
+            @ApiParam(value = "保留的照片",required = false)@RequestParam(value = "savephoto",required = false) String savephoto,
+            @ApiParam(value = "照片",required = false)@RequestParam(value = "photoarr",required = false)MultipartFile[] photoarr){
+        try {
+            Integer uid = Integer.parseInt(request.getSession().getAttribute("uid").toString());
+            Repertory repertory = repertoryService.selectByRid(rid);
+            repertory.setTitle(title);
+            ftpOperation.connectToServer();
+            StringBuilder photo = new StringBuilder();
+            RepertoryDTO repertoryDTO = new RepertoryDTO();
+            repertoryDTO.setRepertoryDTO(repertory);
+            for (String string : repertoryDTO.getPhotolist()){
+                if (!StringUtils.isBlank(savephoto)&&savephoto.indexOf(string) == -1){
+                    photo.append(string+";");
+                    ftpOperation.delectFile(string,"/photo/computerGo/"+string);
+                }
+            }
+            if (photoarr != null || photoarr.length != 0){
+                for (int i = photoarr.length ; i >0 ; i--){
+                    try {
+                        String phototype = photoarr[i].getOriginalFilename().substring(photoarr[i].getOriginalFilename().lastIndexOf("."));
+                        String name = System.currentTimeMillis()+"."+phototype;
+                        if(!ftpOperation.uploadToFtp(photoarr[i].getInputStream(),name,"/computerGo")){
+                            return new ResultUtil().Error("400",photoarr[i].getOriginalFilename()+"文件上传失败");
+                        }
+                        photo.append(name+";");
+                    }catch (Exception e){
+                        continue;
+                    }
+                }
+            }
+            if (photo != null || photo.toString() != "" || StringUtils.isNotBlank(photo.toString())){
+                repertory.setPhoto(photo.toString());
+            }
+            repertoryService.changeByRid(repertory);
+            ftpOperation.closeConnect();
+            return new ResultUtil().Success(repertory.getRid());
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
+
+    @DeleteMapping("/deletepackage")
+    @ResponseBody
+    @ApiOperation(value = "删除套餐",notes = "500报错 ")
+    public ResultDTO changepackage(
+            HttpServletRequest request,
+            @ApiParam(value = "套餐id",required = true)@RequestParam(value = "pid",required = true) Integer pid){
+        try {
+            rpService.deleteByPid(pid);
+            return new ResultUtil().Success();
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
 }

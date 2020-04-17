@@ -18,12 +18,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2 {
     @Bean
     public Docket createRestApi(){
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+        Docket docket = new Docket(DocumentationType.SWAGGER_2);
+        docket.host("39.96.68.53:9090");
+        docket.apiInfo(apiInfo())
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.computerGo.controller"))
                 .paths(PathSelectors.any())
                 .build();
+        return docket;
     }
 
     private ApiInfo apiInfo(){
