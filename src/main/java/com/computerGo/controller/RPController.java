@@ -2,6 +2,7 @@ package com.computerGo.controller;
 
 
 import com.computerGo.DTO.RepertoryDTO;
+import com.computerGo.DTO.RepertoryPackageDTO;
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.base.redis.RedisUtil;
@@ -43,28 +44,22 @@ public class RPController {
     @Autowired
     private PackageService packageService;
 
-
     @GetMapping("/getrepertory")
     @ResponseBody
     @ApiOperation(value = "根据类型获取库存",notes = "500报错")
     public ResultDTO getrepertory(
             @ApiParam(value = "库存类型 0电脑 1cpu 2主板 3显卡 4散热器 5内存 ",required = true)
             @RequestParam(value = "type",required = true) Integer type,
-            @ApiParam(value = "起始位置",required = true)@RequestParam(value = "offset",required = true) int offset,
+            @ApiParam(value = "页码",required = true)@RequestParam(value = "offset",required = true) int offset,
             @ApiParam(value = "数据条数",required = true)@RequestParam(value = "limit",required = true) int limit){
         try {
-            List<RP> rpList = rpService.selectByType(type,offset,limit);
+            List<Repertory> repertoryList = repertoryService.selectByType(type,offset*limit,limit);
             List<RepertoryDTO> repertoryDTOS = new ArrayList<>();
-            for (RP rp : rpList){
+            for (Repertory repertory : repertoryList){
                 RepertoryDTO repertoryDTO = new RepertoryDTO();
                 try {
-                    repertoryDTO.setRepertoryDTO(repertoryService.selectByRid(rp.getRid()));
-                    List<Package> packageList = new ArrayList<>();
-                    for (RP newrp : rpService.selectByRid(rp.getRid())){
-                        packageList.add(packageService.selectByPid(newrp.getPid()));
-                    }
-                    repertoryDTO.setPackageList(packageList);
-                    repertoryDTO.setWatched(redisUtil.get(rp.getRid().toString()).toString());
+                    repertoryDTO.setRepertoryDTO(repertory);
+                    repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
                 }catch (Exception e){
                     continue;
                 }
@@ -81,25 +76,20 @@ public class RPController {
     @ApiOperation(value = "根据标题获取库存",notes = "500报错")
     public ResultDTO getRepertoryByTitle(
             @ApiParam(value = "标题",required = true) @RequestParam(value = "title",required = true) String title,
-            @ApiParam(value = "起始位置",required = true)@RequestParam(value = "offset",required = true) int offset,
+            @ApiParam(value = "页码",required = true)@RequestParam(value = "offset",required = true) int offset,
             @ApiParam(value = "数据条数",required = true)@RequestParam(value = "limit",required = true) int limit){
         try {
-            List<Repertory> repertoryList = repertoryService.selectByTitle(title,offset,limit);
+            List<Repertory> repertoryList = repertoryService.selectByTitle(title,offset*limit,limit);
             List<RepertoryDTO> repertoryDTOS = new ArrayList<>();
             for (Repertory repertory : repertoryList){
                 try {
                     RepertoryDTO repertoryDTO = new RepertoryDTO();
                     repertoryDTO.setRepertoryDTO(repertory);
-                    List<Package> packages = new ArrayList<>();
                     boolean b=true;
-                    for (RP rp : rpService.selectByRid(repertory.getRid())){
-                        if (rp.getType() != 0){
-                            b=false;
-                            break;
-                        }
-                        packages.add(packageService.selectByPid(rp.getPid()));
+                    if (repertory.getType() != 0){
+                        b=false;
+                        break;
                     }
-                    repertoryDTO.setPackageList(packages);
                     repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
                     if (b){
                         repertoryDTOS.add(repertoryDTO);
@@ -113,4 +103,27 @@ public class RPController {
             return new ResultUtil().Error("500",e.toString());
         }
     }
+
+    @GetMapping("/getRepertoryByRID")
+    @ResponseBody
+    @ApiOperation(value = "根据rid获取套餐",notes = "500报错")
+    public ResultDTO getRepertoryByRID(
+            @ApiParam(value = "库存id ",required = true)@RequestParam(value = "rid",required = true) Integer rid){
+        try {
+            Repertory repertory = repertoryService.selectByRid(rid);
+            List<RP> rpList = rpService.selectByRid(rid);
+            List<Package> packageList = new ArrayList<>();
+            for (RP rp : rpList){
+                packageList.add(packageService.selectByPid(rp.getPid()));
+            }
+            RepertoryPackageDTO repertoryPackageDTO = new RepertoryPackageDTO();
+            repertoryPackageDTO.setRepertoryDTO(repertory);
+            repertoryPackageDTO.setPackageList(packageList);
+            repertoryPackageDTO.setWatched(redisUtil.get(rid.toString()).toString());
+            return new ResultUtil().Success(repertoryPackageDTO);
+        }catch (Exception e){
+            return new ResultUtil().Error("500",e.toString());
+        }
+    }
+
 }

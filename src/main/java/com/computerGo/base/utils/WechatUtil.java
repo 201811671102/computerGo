@@ -1,14 +1,21 @@
 package com.computerGo.base.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.codec.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.AlgorithmParameters;
-import java.security.Security;
+import java.io.UnsupportedEncodingException;
+import java.security.*;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,15 +25,23 @@ import java.util.Map;
  * @Author QQ163
  * @Date 2020/4/15 15:54
  **/
+@Log4j2
 public class WechatUtil {
-    public static JSONObject getSessionKeyOrOpenId(String code) {
+
+
+    private  final String appid = "wx1c31c3e561f234db";
+
+
+    private  final String appSecret = "66b6ebcbb472c507db55e302c0bf21ac";
+
+    public  JSONObject getSessionKeyOrOpenId(String code) {
         String requestUrl = "https://api.weixin.qq.com/sns/jscode2session";
         Map<String, String> requestUrlParam = new HashMap<>();
         // https://mp.weixin.qq.com/wxopen/devprofile?action=get_profile&token=164113089&lang=zh_CN
         //小程序appId
-        requestUrlParam.put("appid", "小程序appId");
+        requestUrlParam.put("appid", appid);
         //小程序secret
-        requestUrlParam.put("secret", "小程序secret");
+        requestUrlParam.put("secret", appSecret);
         //小程序端返回的code
         requestUrlParam.put("js_code", code);
         //默认参数
@@ -65,7 +80,24 @@ public class WechatUtil {
                 String result = new String(resultByte, "UTF-8");
                 return JSON.parseObject(result);
             }
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
+            log.error(e.getMessage(), e);
+        } catch (NoSuchPaddingException e) {
+            log.error(e.getMessage(), e);
+        } catch (InvalidParameterSpecException e) {
+            log.error(e.getMessage(), e);
+        } catch (IllegalBlockSizeException e) {
+            log.error(e.getMessage(), e);
+        } catch (BadPaddingException e) {
+            log.error(e.getMessage(), e);
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage(), e);
+        } catch (InvalidKeyException e) {
+            log.error(e.getMessage(), e);
+        } catch (InvalidAlgorithmParameterException e) {
+            log.error(e.getMessage(), e);
+        } catch (NoSuchProviderException e) {
+            log.error(e.getMessage(), e);
         }
         return null;
     }

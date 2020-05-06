@@ -1,21 +1,20 @@
 package com.computerGo.DTO;
 
-
 import com.computerGo.pojo.Repertory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @ClassName RepertoryDTO
+ * @ClassName RepertoryDTODD
  * @Description TODO
  * @Author QQ163
- * @Date 2020/4/15 18:58
+ * @Date 2020/4/30 17:30
  **/
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class RepertoryDTO {
+@NoArgsConstructor
+public class RepertorySellerDTO {
     /*id*/
     private Integer rid;
     //浏览人数
@@ -26,12 +25,15 @@ public class RepertoryDTO {
     private String title;
     /*价格*/
     private Double price;
+    /*库存*/
+    private Integer number;
 
     public void setRepertoryDTO(Repertory repertory){
         this.setRid(repertory.getRid());
         this.setPrice(repertory.getPrice());
         this.setTitle(repertory.getTitle());
         this.setPhoto(changePhoto(repertory.getPhoto()));
+        this.setNumber(repertory.getNumber());
     }
     public String changePhoto(String photo){
         String[] photoarr = photo.split(";");

@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.computerGo.pojo.Package">
     <id column="pid" jdbcType="INTEGER" property="pid" />
     <result column="packagemessage" jdbcType="VARCHAR" property="packagemessage" />
-    <result column="number" jdbcType="INTEGER" property="number" />
     <result column="price" jdbcType="DOUBLE" property="price" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    pid, packagemessage, number, price
+    pid, packagemessage, price
   </sql>
   <select id="selectByExample" parameterType="com.computerGo.pojo.PackageExample" resultMap="BaseResultMap">
     select
@@ -102,10 +101,8 @@
     <selectKey keyProperty="pid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into package (packagemessage, number, price
-      )
-    values (#{packagemessage,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}
-      )
+    insert into package (packagemessage, price)
+    values (#{packagemessage,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="com.computerGo.pojo.Package">
     <selectKey keyProperty="pid" order="AFTER" resultType="java.lang.Integer">
@@ -116,9 +113,6 @@
       <if test="packagemessage != null">
         packagemessage,
       </if>
-      <if test="number != null">
-        number,
-      </if>
       <if test="price != null">
         price,
       </if>
@@ -126,9 +120,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="packagemessage != null">
         #{packagemessage,jdbcType=VARCHAR},
-      </if>
-      <if test="number != null">
-        #{number,jdbcType=INTEGER},
       </if>
       <if test="price != null">
         #{price,jdbcType=DOUBLE},
@@ -150,9 +141,6 @@
       <if test="record.packagemessage != null">
         packagemessage = #{record.packagemessage,jdbcType=VARCHAR},
       </if>
-      <if test="record.number != null">
-        number = #{record.number,jdbcType=INTEGER},
-      </if>
       <if test="record.price != null">
         price = #{record.price,jdbcType=DOUBLE},
       </if>
@@ -165,7 +153,6 @@
     update package
     set pid = #{record.pid,jdbcType=INTEGER},
       packagemessage = #{record.packagemessage,jdbcType=VARCHAR},
-      number = #{record.number,jdbcType=INTEGER},
       price = #{record.price,jdbcType=DOUBLE}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -177,9 +164,6 @@
       <if test="packagemessage != null">
         packagemessage = #{packagemessage,jdbcType=VARCHAR},
       </if>
-      <if test="number != null">
-        number = #{number,jdbcType=INTEGER},
-      </if>
       <if test="price != null">
         price = #{price,jdbcType=DOUBLE},
       </if>
@@ -189,7 +173,6 @@
   <update id="updateByPrimaryKey" parameterType="com.computerGo.pojo.Package">
     update package
     set packagemessage = #{packagemessage,jdbcType=VARCHAR},
-      number = #{number,jdbcType=INTEGER},
       price = #{price,jdbcType=DOUBLE}
     where pid = #{pid,jdbcType=INTEGER}
   </update>

@@ -3,8 +3,6 @@ package com.computerGo.service;
 
 import com.computerGo.pojo.Package;
 
-import java.util.List;
-
 public interface PackageService {
     /*增加套餐*/
     int insertPackage(Package newpackage)throws Exception;

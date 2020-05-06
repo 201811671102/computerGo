@@ -1,14 +1,12 @@
 import com.computerGo.App;
-import com.computerGo.controller.RPController;
 import com.computerGo.controller.URController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName computerGo
@@ -21,5 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 public class computerGo {
 
 
+    @Test
+    public void yml(){
+        String a = "http://39.96.68.53:70/computerGo/auto.jpg";
+        String path = a.replaceAll("http://39.96.68.53:70","/photo");
+        System.out.println(path.substring(path.lastIndexOf("/")+1));
+        System.out.println(path.substring(0, path.lastIndexOf("/")));
+    }
 
+    @Autowired
+    private URController urController;
+    @Test
+    public void get(){
+        System.out.println(urController.getRepertory(1));
+    }
 }

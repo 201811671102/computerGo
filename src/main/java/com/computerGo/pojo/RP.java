@@ -7,8 +7,6 @@ public class RP {
 
     private Integer pid;
 
-    private Integer type;
-
     public Integer getRpid() {
         return rpid;
     }
@@ -31,13 +29,5 @@ public class RP {
 
     public void setPid(Integer pid) {
         this.pid = pid;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
     }
 }

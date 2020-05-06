@@ -4,6 +4,7 @@ import com.computerGo.mapper.UIMapper;
 import com.computerGo.pojo.UI;
 import com.computerGo.pojo.UIExample;
 import com.computerGo.service.UIService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,17 @@ public class UIServiceImpl implements UIService {
         UIExample.Criteria criteria = uiExample.createCriteria();
         criteria.andIidEqualTo(iid);
         return uiMapper.deleteByExample(uiExample);
+    }
+
+    @Override
+    public List<UI> selectByUidRow(Integer uid, Integer offset, Integer limit) throws Exception {
+        UIExample uiExample = new UIExample();
+        UIExample.Criteria criteria = uiExample.createCriteria();
+        criteria.andUidEqualTo(uid);
+        if (offset!=-1&&limit!=-1) {
+            RowBounds rowBounds = new RowBounds(offset, limit);
+            return uiMapper.selectByExampleWithRowbounds(uiExample, rowBounds);
+        }
+        return uiMapper.selectByExample(uiExample);
     }
 }

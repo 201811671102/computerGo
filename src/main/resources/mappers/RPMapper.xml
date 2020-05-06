@@ -5,7 +5,6 @@
     <id column="rpid" jdbcType="INTEGER" property="rpid" />
     <result column="rid" jdbcType="INTEGER" property="rid" />
     <result column="pid" jdbcType="INTEGER" property="pid" />
-    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    rpid, rid, pid, type
+    rpid, rid, pid
   </sql>
   <select id="selectByExample" parameterType="com.computerGo.pojo.RPExample" resultMap="BaseResultMap">
     select
@@ -102,10 +101,8 @@
     <selectKey keyProperty="rpid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into rp (rid, pid, type
-      )
-    values (#{rid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
-      )
+    insert into rp (rid, pid)
+    values (#{rid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.computerGo.pojo.RP">
     <selectKey keyProperty="rpid" order="AFTER" resultType="java.lang.Integer">
@@ -119,9 +116,6 @@
       <if test="pid != null">
         pid,
       </if>
-      <if test="type != null">
-        type,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="rid != null">
@@ -129,9 +123,6 @@
       </if>
       <if test="pid != null">
         #{pid,jdbcType=INTEGER},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -153,9 +144,6 @@
       <if test="record.pid != null">
         pid = #{record.pid,jdbcType=INTEGER},
       </if>
-      <if test="record.type != null">
-        type = #{record.type,jdbcType=INTEGER},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -165,8 +153,7 @@
     update rp
     set rpid = #{record.rpid,jdbcType=INTEGER},
       rid = #{record.rid,jdbcType=INTEGER},
-      pid = #{record.pid,jdbcType=INTEGER},
-      type = #{record.type,jdbcType=INTEGER}
+      pid = #{record.pid,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -180,17 +167,13 @@
       <if test="pid != null">
         pid = #{pid,jdbcType=INTEGER},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=INTEGER},
-      </if>
     </set>
     where rpid = #{rpid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.computerGo.pojo.RP">
     update rp
     set rid = #{rid,jdbcType=INTEGER},
-      pid = #{pid,jdbcType=INTEGER},
-      type = #{type,jdbcType=INTEGER}
+      pid = #{pid,jdbcType=INTEGER}
     where rpid = #{rpid,jdbcType=INTEGER}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="com.computerGo.pojo.RPExample" resultMap="BaseResultMap">

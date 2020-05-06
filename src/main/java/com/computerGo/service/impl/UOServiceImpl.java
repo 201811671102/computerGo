@@ -47,8 +47,11 @@ public class UOServiceImpl implements UOService {
         UOExample uoExample = new UOExample();
         UOExample.Criteria criteria = uoExample.createCriteria();
         criteria.andUidEqualTo(uid);
-        RowBounds rowBounds = new RowBounds(offset,limit);
-        return uoMapper.selectByExampleWithRowbounds(uoExample,rowBounds);
+        if (offset!=-1&&limit!=-1) {
+            RowBounds rowBounds = new RowBounds(offset,limit);
+            return uoMapper.selectByExampleWithRowbounds(uoExample,rowBounds);
+        }
+        return uoMapper.selectByExample(uoExample);
     }
 
     @Override
@@ -57,5 +60,13 @@ public class UOServiceImpl implements UOService {
         UOExample.Criteria criteria = uoExample.createCriteria();
         criteria.andOidEqualTo(oid);
         return uoMapper.countByExample(uoExample);
+    }
+
+    @Override
+    public UO selectByOid(Integer oid) throws Exception {
+        UOExample uoExample = new UOExample();
+        UOExample.Criteria criteria = uoExample.createCriteria();
+        criteria.andOidEqualTo(oid);
+        return uoMapper.selectByExample(uoExample).get(0);
     }
 }

@@ -5,8 +5,6 @@ public class Package {
 
     private String packagemessage;
 
-    private Integer number;
-
     private Double price;
 
     public Integer getPid() {
@@ -23,14 +21,6 @@ public class Package {
 
     public void setPackagemessage(String packagemessage) {
         this.packagemessage = packagemessage == null ? null : packagemessage.trim();
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
     }
 
     public Double getPrice() {

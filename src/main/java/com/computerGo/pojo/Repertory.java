@@ -7,9 +7,15 @@ public class Repertory {
 
     private Double price;
 
+    private Integer number;
+
     private Integer evaluation;
 
     private String photo;
+
+    private String detailsphoto;
+
+    private Integer type;
 
     public Integer getRid() {
         return rid;
@@ -35,6 +41,14 @@ public class Repertory {
         this.price = price;
     }
 
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
     public Integer getEvaluation() {
         return evaluation;
     }
@@ -49,5 +63,21 @@ public class Repertory {
 
     public void setPhoto(String photo) {
         this.photo = photo == null ? null : photo.trim();
+    }
+
+    public String getDetailsphoto() {
+        return detailsphoto;
+    }
+
+    public void setDetailsphoto(String detailsphoto) {
+        this.detailsphoto = detailsphoto == null ? null : detailsphoto.trim();
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

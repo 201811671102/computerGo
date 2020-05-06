@@ -20,7 +20,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDTO extends User {
     private Integer role;
-    private List<Identity> identityList;
     public void setUserDto(User user){
         this.setUid(user.getUid());
         this.setOpenid(user.getOpenid());

@@ -13,8 +13,6 @@ public interface RPService {
     int deleteByPid(Integer pid)throws Exception;
     /*rid查询记录*/
     List<RP> selectByRid(Integer rid)throws Exception;
-    /*type查询记录*/
-    List<RP> selectByType(Integer type,int offset, int limit)throws Exception;
     /*pid查询记录*/
     RP selectBypid(Integer pid)throws Exception;
 }

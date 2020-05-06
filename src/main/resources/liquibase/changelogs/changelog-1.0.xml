@@ -53,10 +53,19 @@
             <column name="price" type="double(10)" encoding="utf8" remarks="库存价格" >
                 <constraints  nullable="false"></constraints>
             </column>
+            <column name="number" type="integer(10)" encoding="utf8" remarks="库存数量" >
+                <constraints  nullable="false"></constraints>
+            </column>
             <column name="evaluation" type="integer(2)" encoding="utf8" remarks="评价等级" >
                 <constraints  nullable="false"></constraints>
             </column>
-            <column name="photo" type="varchar(200)" encoding="utf8" remarks="相关照片" >
+            <column name="photo" type="varchar(2000)" encoding="utf8" remarks="相关照片" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="detailsphoto" type="varchar(2000)" encoding="utf8" remarks="详情照片" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="type" type="integer(2)" encoding="utf8" remarks="库存类型 0电脑 1cpu 2主板 3显卡 4散热器 5内存" >
                 <constraints  nullable="false"></constraints>
             </column>
         </createTable><!--库存-->
@@ -67,9 +76,7 @@
             <column name="packagemessage" type="varchar(100)" encoding="utf8" remarks="套餐" >
                 <constraints  nullable="false"></constraints>
             </column>
-            <column name="number" type="integer(10)" encoding="utf8" remarks="套餐数量" >
-                <constraints  nullable="false"></constraints>
-            </column>
+
             <column name="price" type="double(10)" encoding="utf8" remarks="套餐价格" >
                 <constraints  nullable="false"></constraints>
             </column>
@@ -87,13 +94,22 @@
             <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" >
                 <constraints  nullable="false"></constraints>
             </column>
-            <column name="num" type="integer(5)" encoding="utf8" remarks="套餐数量" >
+            <column name="num" type="integer(5)" encoding="utf8" remarks="库存数量" >
                 <constraints  nullable="false"></constraints>
             </column>
             <column name="state" type="integer(2)" encoding="utf8" remarks="订单状态" >
                 <constraints  nullable="false"></constraints>
             </column>
             <column name="uaddress" type="varchar(150)" encoding="utf8" remarks="用户详细地址" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="uname" type="varchar(30)" encoding="utf8" remarks="用户名字" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="uphone" type="varchar(30)" encoding="utf8" remarks="用户手机" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="ordernumber" type="varchar(100)" encoding="utf8" remarks="订单号" >
                 <constraints  nullable="false"></constraints>
             </column>
         </createTable><!--订单-->
@@ -116,9 +132,6 @@
                 <constraints nullable="false"></constraints>
             </column>
             <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" >
-                <constraints  nullable="false"></constraints>
-            </column>
-            <column name="type" type="integer(2)" encoding="utf8" remarks="库存类型 0电脑 1cpu 2主板 3显卡 4散热器 5内存" >
                 <constraints  nullable="false"></constraints>
             </column>
         </createTable><!--库存套餐-->

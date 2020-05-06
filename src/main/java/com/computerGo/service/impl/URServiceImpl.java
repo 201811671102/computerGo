@@ -38,8 +38,11 @@ public class URServiceImpl implements URService {
         URExample urExample = new URExample();
         URExample.Criteria criteria = urExample.createCriteria();
         criteria.andUidEqualTo(uid);
-        RowBounds rowBounds = new RowBounds(offset,limit);
-        return urMapper.selectByExampleWithRowbounds(urExample,rowBounds);
+        if (offset!=-1&&limit!=-1) {
+            RowBounds rowBounds = new RowBounds(offset,limit);
+            return urMapper.selectByExampleWithRowbounds(urExample,rowBounds);
+        }
+        return urMapper.selectByExample(urExample);
     }
 
     @Override

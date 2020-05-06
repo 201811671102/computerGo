@@ -5,8 +5,11 @@
     <id column="rid" jdbcType="INTEGER" property="rid" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="number" jdbcType="INTEGER" property="number" />
     <result column="evaluation" jdbcType="INTEGER" property="evaluation" />
     <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="detailsphoto" jdbcType="VARCHAR" property="detailsphoto" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    rid, title, price, evaluation, photo
+    rid, title, price, number, evaluation, photo, detailsphoto, type
   </sql>
   <select id="selectByExample" parameterType="com.computerGo.pojo.RepertoryExample" resultMap="BaseResultMap">
     select
@@ -103,10 +106,12 @@
     <selectKey keyProperty="rid" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into repertory (title, price, evaluation, 
-      photo)
-    values (#{title,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{evaluation,jdbcType=INTEGER}, 
-      #{photo,jdbcType=VARCHAR})
+    insert into repertory (title, price, number, 
+      evaluation, photo, detailsphoto, 
+      type)
+    values (#{title,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{number,jdbcType=INTEGER}, 
+      #{evaluation,jdbcType=INTEGER}, #{photo,jdbcType=VARCHAR}, #{detailsphoto,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.computerGo.pojo.Repertory">
     <selectKey keyProperty="rid" order="AFTER" resultType="java.lang.Integer">
@@ -120,11 +125,20 @@
       <if test="price != null">
         price,
       </if>
+      <if test="number != null">
+        number,
+      </if>
       <if test="evaluation != null">
         evaluation,
       </if>
       <if test="photo != null">
         photo,
+      </if>
+      <if test="detailsphoto != null">
+        detailsphoto,
+      </if>
+      <if test="type != null">
+        type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -134,11 +148,20 @@
       <if test="price != null">
         #{price,jdbcType=DOUBLE},
       </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
       <if test="evaluation != null">
         #{evaluation,jdbcType=INTEGER},
       </if>
       <if test="photo != null">
         #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="detailsphoto != null">
+        #{detailsphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -160,11 +183,20 @@
       <if test="record.price != null">
         price = #{record.price,jdbcType=DOUBLE},
       </if>
+      <if test="record.number != null">
+        number = #{record.number,jdbcType=INTEGER},
+      </if>
       <if test="record.evaluation != null">
         evaluation = #{record.evaluation,jdbcType=INTEGER},
       </if>
       <if test="record.photo != null">
         photo = #{record.photo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.detailsphoto != null">
+        detailsphoto = #{record.detailsphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -176,8 +208,11 @@
     set rid = #{record.rid,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
       price = #{record.price,jdbcType=DOUBLE},
+      number = #{record.number,jdbcType=INTEGER},
       evaluation = #{record.evaluation,jdbcType=INTEGER},
-      photo = #{record.photo,jdbcType=VARCHAR}
+      photo = #{record.photo,jdbcType=VARCHAR},
+      detailsphoto = #{record.detailsphoto,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -191,11 +226,20 @@
       <if test="price != null">
         price = #{price,jdbcType=DOUBLE},
       </if>
+      <if test="number != null">
+        number = #{number,jdbcType=INTEGER},
+      </if>
       <if test="evaluation != null">
         evaluation = #{evaluation,jdbcType=INTEGER},
       </if>
       <if test="photo != null">
         photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="detailsphoto != null">
+        detailsphoto = #{detailsphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
       </if>
     </set>
     where rid = #{rid,jdbcType=INTEGER}
@@ -204,8 +248,11 @@
     update repertory
     set title = #{title,jdbcType=VARCHAR},
       price = #{price,jdbcType=DOUBLE},
+      number = #{number,jdbcType=INTEGER},
       evaluation = #{evaluation,jdbcType=INTEGER},
-      photo = #{photo,jdbcType=VARCHAR}
+      photo = #{photo,jdbcType=VARCHAR},
+      detailsphoto = #{detailsphoto,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER}
     where rid = #{rid,jdbcType=INTEGER}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="com.computerGo.pojo.RepertoryExample" resultMap="BaseResultMap">

@@ -15,4 +15,8 @@ public interface RepertoryService {
     int changeByRid(Repertory repertory)throws Exception;
     /*增加商品*/
     int insertRepertory(Repertory repertory)throws Exception;
+    /*更新商品数量*/
+    int updateRepertory(Repertory repertory)throws Exception;
+    /*根据状态查询*/
+    List<Repertory> selectByType(Integer type,Integer offset,Integer limit)throws Exception;
 }

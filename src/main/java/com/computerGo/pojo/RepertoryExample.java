@@ -294,6 +294,66 @@ public class RepertoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andNumberIsNull() {
+            addCriterion("number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberIsNotNull() {
+            addCriterion("number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberEqualTo(Integer value) {
+            addCriterion("number =", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberNotEqualTo(Integer value) {
+            addCriterion("number <>", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberGreaterThan(Integer value) {
+            addCriterion("number >", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberGreaterThanOrEqualTo(Integer value) {
+            addCriterion("number >=", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberLessThan(Integer value) {
+            addCriterion("number <", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberLessThanOrEqualTo(Integer value) {
+            addCriterion("number <=", value, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberIn(List<Integer> values) {
+            addCriterion("number in", values, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberNotIn(List<Integer> values) {
+            addCriterion("number not in", values, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberBetween(Integer value1, Integer value2) {
+            addCriterion("number between", value1, value2, "number");
+            return (Criteria) this;
+        }
+
+        public Criteria andNumberNotBetween(Integer value1, Integer value2) {
+            addCriterion("number not between", value1, value2, "number");
+            return (Criteria) this;
+        }
+
         public Criteria andEvaluationIsNull() {
             addCriterion("evaluation is null");
             return (Criteria) this;
@@ -421,6 +481,136 @@ public class RepertoryExample {
 
         public Criteria andPhotoNotBetween(String value1, String value2) {
             addCriterion("photo not between", value1, value2, "photo");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoIsNull() {
+            addCriterion("detailsphoto is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoIsNotNull() {
+            addCriterion("detailsphoto is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoEqualTo(String value) {
+            addCriterion("detailsphoto =", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoNotEqualTo(String value) {
+            addCriterion("detailsphoto <>", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoGreaterThan(String value) {
+            addCriterion("detailsphoto >", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoGreaterThanOrEqualTo(String value) {
+            addCriterion("detailsphoto >=", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoLessThan(String value) {
+            addCriterion("detailsphoto <", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoLessThanOrEqualTo(String value) {
+            addCriterion("detailsphoto <=", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoLike(String value) {
+            addCriterion("detailsphoto like", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoNotLike(String value) {
+            addCriterion("detailsphoto not like", value, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoIn(List<String> values) {
+            addCriterion("detailsphoto in", values, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoNotIn(List<String> values) {
+            addCriterion("detailsphoto not in", values, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoBetween(String value1, String value2) {
+            addCriterion("detailsphoto between", value1, value2, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailsphotoNotBetween(String value1, String value2) {
+            addCriterion("detailsphoto not between", value1, value2, "detailsphoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Integer value) {
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Integer value) {
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Integer value) {
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Integer value) {
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Integer> values) {
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Integer> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Integer value1, Integer value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
     }

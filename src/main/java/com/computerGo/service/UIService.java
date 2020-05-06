@@ -11,4 +11,6 @@ public interface UIService {
     int insertUI(UI ui) throws Exception;
     /*iid删除记录*/
     int deleteByIid(Integer iid)throws Exception;
+    /*根据uid分页查询*/
+    List<UI> selectByUidRow(Integer uid,Integer offset,Integer limit)throws Exception;
 }

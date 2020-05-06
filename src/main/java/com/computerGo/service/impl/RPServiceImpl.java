@@ -49,14 +49,6 @@ public class RPServiceImpl implements RPService {
         return rpMapper.selectByExample(rpExample);
     }
 
-    @Override
-    public List<RP> selectByType(Integer type,int offset, int limit) throws Exception {
-        RPExample rpExample = new RPExample();
-        RPExample.Criteria criteria = rpExample.createCriteria();
-        criteria.andTypeEqualTo(type);
-        RowBounds rowBounds = new RowBounds(offset,limit);
-        return rpMapper.selectByExampleWithRowbounds(rpExample,rowBounds);
-    }
 
     @Override
     public RP selectBypid(Integer pid) throws Exception {
