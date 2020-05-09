@@ -283,6 +283,66 @@ public class UOExample {
             addCriterion("oid not between", value1, value2, "oid");
             return (Criteria) this;
         }
+
+        public Criteria andShelluidIsNull() {
+            addCriterion("shelluid is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidIsNotNull() {
+            addCriterion("shelluid is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidEqualTo(Integer value) {
+            addCriterion("shelluid =", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidNotEqualTo(Integer value) {
+            addCriterion("shelluid <>", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidGreaterThan(Integer value) {
+            addCriterion("shelluid >", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("shelluid >=", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidLessThan(Integer value) {
+            addCriterion("shelluid <", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidLessThanOrEqualTo(Integer value) {
+            addCriterion("shelluid <=", value, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidIn(List<Integer> values) {
+            addCriterion("shelluid in", values, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidNotIn(List<Integer> values) {
+            addCriterion("shelluid not in", values, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidBetween(Integer value1, Integer value2) {
+            addCriterion("shelluid between", value1, value2, "shelluid");
+            return (Criteria) this;
+        }
+
+        public Criteria andShelluidNotBetween(Integer value1, Integer value2) {
+            addCriterion("shelluid not between", value1, value2, "shelluid");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

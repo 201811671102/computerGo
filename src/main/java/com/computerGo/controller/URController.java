@@ -5,6 +5,7 @@ import com.computerGo.DTO.RepertorySellerDTO;
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.base.redis.RedisUtil;
+import com.computerGo.ftp.FtpOperation;
 import com.computerGo.pojo.Package;
 import com.computerGo.pojo.RP;
 import com.computerGo.pojo.Repertory;
@@ -17,7 +18,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +44,9 @@ public class URController {
     private PackageService packageService;
     @Autowired
     private RPService rpService;
+    @Autowired
+    private FtpOperation ftpOperation;
+
 
 
     @GetMapping("/myrepertory")
@@ -64,7 +67,11 @@ public class URController {
                     Repertory repertory = repertoryService.selectByRid(ur.getRid());
                     if (repertory.getType() == type) {
                         repertorySellerDTO.setRepertoryDTO(repertory);
-                        repertorySellerDTO.setWatched(redisUtil.get(ur.getRid().toString()).toString());
+                        if (redisUtil.hasKey("computerGO"+ur.getRid().toString())){
+                            repertorySellerDTO.setWatched(redisUtil.get("computerGO"+ur.getRid().toString()).toString());
+                        }else {
+                            repertorySellerDTO.setWatched(repertory.getWatch());
+                        }
                         repertorySellerDTOList.add(repertorySellerDTO);
                     }
                 }catch (Exception e){
@@ -95,6 +102,7 @@ public class URController {
             repertory.setPrice(0.0);
             repertory.setEvaluation(0);
             repertory.setType(type);
+
             /*
              ftpOperation.connectToServer();
             StringBuilder photo = new StringBuilder();
@@ -143,15 +151,14 @@ public class URController {
                 stringBuilder1.append(str+";");
             }
             repertory.setDetailsphoto(stringBuilder1.toString());
-
+            repertory.setWatch("0");
             repertoryService.insertRepertory(repertory);
             //添加商户库存记录
             UR ur = new UR();
             ur.setUid(uid);
             ur.setRid(repertory.getRid());
             urService.insertUR(ur);
-            redisUtil.set(repertory.getRid().toString(),0);
-
+            redisUtil.set("computerGO"+repertory.getRid().toString(),0);
             return new ResultUtil().Success(repertory.getRid());
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
@@ -168,7 +175,7 @@ public class URController {
             @ApiParam(value = "套餐价格",required = true)@RequestParam(value = "price",required = true) double price){
         try {
             List<RP> rpList = rpService.selectByRid(rid);
-            double newprice = 0;
+            double newprice = price;
             for (RP newrp : rpList){
                 Package npackage = packageService.selectByPid(newrp.getPid());
                 newprice = npackage.getPrice() > price ? price : npackage.getPrice();
@@ -195,8 +202,15 @@ public class URController {
     @ApiOperation(value = "添加浏览人数",notes = "500报错")
     public ResultDTO addWatched(@ApiParam(value = "库存id",required = true)@RequestParam(value = "rid",required = true)Integer rid){
         try {
-            redisUtil.incr(rid.toString(),1);
-            return new ResultUtil().Success(redisUtil.get(rid.toString()));
+            Repertory repertory = repertoryService.selectByRid(rid);
+            if (redisUtil.hasKey("computerGO"+rid.toString())){
+                redisUtil.incr("computerGO"+rid.toString(),1);
+            }else{
+                redisUtil.set("computerGO"+rid.toString(),Integer.parseInt(repertory.getWatch())+1);
+            }
+            repertory.setWatch((Integer.parseInt(repertory.getWatch())+1)+"");
+            repertoryService.updateRepertory(repertory);
+            return new ResultUtil().Success(redisUtil.get("computerGO"+rid.toString()));
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }
@@ -209,15 +223,17 @@ public class URController {
         try {
             urService.deleteByRid(rid);
             rpService.deleteByRid(rid);
-            redisUtil.del(rid.toString());
-           /* Repertory repertory = repertoryService.selectByRid(rid);
+            if (redisUtil.hasKey("computerGO"+rid.toString())) {
+                redisUtil.del("computerGO" + rid.toString());
+            }
+            Repertory repertory = repertoryService.selectByRid(rid);
             String[] photots = repertory.getPhoto().split(";");
-            ftpOperation.connectToServer();
+          /*  ftpOperation.connectToServer();*/
             for (String str : photots){
                 String path = str.replaceAll("http://39.96.68.53:70","/photo");
                 ftpOperation.delectFile(str.substring(path.lastIndexOf("/")),str.substring(0,path.lastIndexOf("/")));
             }
-            ftpOperation.closeConnect();*/
+         /*   ftpOperation.closeConnect();*/
             return new ResultUtil().Success();
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
@@ -253,32 +269,25 @@ public class URController {
                 }
                 repertory.setDetailsphoto(stringBuilder1.toString());
             }
-           /*
-            ftpOperation.connectToServer();
-            if (photoarr != null || photoarr.length != 0){
-                String[] photots = repertory.getPhoto().split(";");
-                for (String str : photots){
-                    String path = str.replaceAll("http://39.96.68.53:70","/photo");
-                    ftpOperation.delectFile(str.substring(path.lastIndexOf("/"))+1,str.substring(0,path.lastIndexOf("/")));
-                }
-                for (int i = photoarr.length ; i >0 ; i--){
-                    try {
-                        String phototype = photoarr[i].getOriginalFilename().substring(photoarr[i].getOriginalFilename().lastIndexOf("."));
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                        String path = simpleDateFormat.format(System.currentTimeMillis());
-                        String name = path+"/"+System.currentTimeMillis()+"."+phototype;
-                        if(!ftpOperation.uploadToFtp(photoarr[i].getInputStream(),name,"/photo/computerGo/"+path)){
-                            return new ResultUtil().Error("400",photoarr[i].getOriginalFilename()+"文件上传失败");
-                        }
-                        photo.append("http://39.96.68.53:70/computerGo/"+name+";");
-                    }catch (Exception e){
-                        continue;
+
+            if ((photoarr != null || photoarr.length != 0) || (photoarr != null || photoarr.length != 0)) {
+                /*ftpOperation.connectToServer();*/
+                if (photoarr != null || photoarr.length != 0) {
+                    String[] photots = repertory.getPhoto().split(";");
+                    for (String str : photots) {
+                        String path = str.replaceAll("http://39.96.68.53:70", "/photo");
+                        ftpOperation.delectFile(str.substring(path.lastIndexOf("/")) + 1, str.substring(0, path.lastIndexOf("/")));
                     }
                 }
-                repertory.setPhoto(photo.toString());
+                if (photoarr != null || photoarr.length != 0) {
+                    String[] photots = repertory.getDetailsphoto().split(";");
+                    for (String str : photots) {
+                        String path = str.replaceAll("http://39.96.68.53:70", "/photo");
+                        ftpOperation.delectFile(str.substring(path.lastIndexOf("/")) + 1, str.substring(0, path.lastIndexOf("/")));
+                    }
+                }
+                /*ftpOperation.closeConnect();*/
             }
-                   ftpOperation.closeConnect();
-            */
             repertoryService.changeByRid(repertory);
             return new ResultUtil().Success();
         }catch (Exception e){

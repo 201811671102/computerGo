@@ -26,12 +26,16 @@ public class RepertoryServiceImpl implements RepertoryService {
     }
 
     @Override
-    public List<Repertory> selectByTitle(String title,int offset, int limit)throws Exception {
+    public List<Repertory> selectByTitleType(String title,Integer type,int offset, int limit)throws Exception {
         RepertoryExample repertoryExample = new RepertoryExample();
         RepertoryExample.Criteria criteria = repertoryExample.createCriteria();
         criteria.andTitleLike("%"+title+"%");
-        RowBounds rowBounds = new RowBounds(offset,limit);
-        return repertoryMapper.selectByExampleWithRowbounds(repertoryExample,rowBounds);
+        criteria.andTypeEqualTo(type);
+        if (offset != -1 && limit != -1){
+            RowBounds rowBounds = new RowBounds(offset,limit);
+            return repertoryMapper.selectByExampleWithRowbounds(repertoryExample,rowBounds);
+        }
+        return repertoryMapper.selectByExample(repertoryExample);
     }
 
     @Override

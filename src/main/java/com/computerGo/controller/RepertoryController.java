@@ -2,6 +2,7 @@ package com.computerGo.controller;
 
 import com.computerGo.DTO.TheorderDTO;
 import com.computerGo.DTO.TheorderONOrderDTO;
+import com.computerGo.DTO.TheorderSuccessDTO;
 import com.computerGo.base.ResultUtil;
 import com.computerGo.base.dto.ResultDTO;
 import com.computerGo.pojo.*;
@@ -74,12 +75,13 @@ public class RepertoryController {
             theorder.setUname("无");
             theorder.setUphone("无");
             theorder.setOrdernumber(ordernum);
-
+            theorder.setEvaluation(0);
             orderService.insertOrder(theorder);
             //添加用户订单记录
             UO uo = new  UO();
             uo.setUid(uid);
             uo.setOid(theorder.getOid());
+            uo.setShelluid(urService.selectByRid(rid).getUid());
             uoService.insertUO(uo);
 
             TheorderONOrderDTO theorderONOrderDTO = new TheorderONOrderDTO();
@@ -144,7 +146,12 @@ public class RepertoryController {
             Repertory repertory = repertoryService.selectByRid(theorder.getRid());
             repertory.setNumber(repertory.getNumber()-1);
             repertoryService.updateRepertory(repertory);
-            return new ResultUtil().Success();
+
+            TheorderSuccessDTO theorderSuccessDTO = new TheorderSuccessDTO();
+            theorderSuccessDTO.SetTheorderDTO(theorder);
+            theorderSuccessDTO.setTitle(repertory.getTitle());
+            theorderSuccessDTO.setPackagemessage(packageService.selectByPid(theorder.getPid()).getPackagemessage());
+            return new ResultUtil().Success(theorderSuccessDTO);
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());
         }

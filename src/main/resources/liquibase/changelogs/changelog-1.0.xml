@@ -68,6 +68,9 @@
             <column name="type" type="integer(2)" encoding="utf8" remarks="库存类型 0电脑 1cpu 2主板 3显卡 4散热器 5内存" >
                 <constraints  nullable="false"></constraints>
             </column>
+            <column name="watch" type="varchar(20)" encoding="utf8" remarks="浏览人数" >
+                <constraints  nullable="false"></constraints>
+            </column>
         </createTable><!--库存-->
         <createTable tableName="package" >
             <column name="pid" type="integer(100)" encoding="utf8" remarks="套餐id" autoIncrement="true">
@@ -110,6 +113,9 @@
                 <constraints  nullable="false"></constraints>
             </column>
             <column name="ordernumber" type="varchar(100)" encoding="utf8" remarks="订单号" >
+                <constraints  nullable="false"></constraints>
+            </column>
+            <column name="evaluation" type="integer(2)" encoding="utf8" remarks="评价等级" >
                 <constraints  nullable="false"></constraints>
             </column>
         </createTable><!--订单-->
@@ -155,6 +161,9 @@
             </column>
             <column name="oid" type="integer(100)" encoding="utf8" remarks="订单id">
                 <constraints  nullable="false"></constraints>
+            </column>
+            <column name="shelluid" type="integer(50)" encoding="utf8" remarks="卖家id" >
+                <constraints nullable="false"></constraints>
             </column>
         </createTable><!--用户订单-->
     </changeSet>

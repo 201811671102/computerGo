@@ -744,6 +744,66 @@ public class TheorderExample {
             addCriterion("ordernumber not between", value1, value2, "ordernumber");
             return (Criteria) this;
         }
+
+        public Criteria andEvaluationIsNull() {
+            addCriterion("evaluation is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationIsNotNull() {
+            addCriterion("evaluation is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationEqualTo(Integer value) {
+            addCriterion("evaluation =", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationNotEqualTo(Integer value) {
+            addCriterion("evaluation <>", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationGreaterThan(Integer value) {
+            addCriterion("evaluation >", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationGreaterThanOrEqualTo(Integer value) {
+            addCriterion("evaluation >=", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationLessThan(Integer value) {
+            addCriterion("evaluation <", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationLessThanOrEqualTo(Integer value) {
+            addCriterion("evaluation <=", value, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationIn(List<Integer> values) {
+            addCriterion("evaluation in", values, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationNotIn(List<Integer> values) {
+            addCriterion("evaluation not in", values, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationBetween(Integer value1, Integer value2) {
+            addCriterion("evaluation between", value1, value2, "evaluation");
+            return (Criteria) this;
+        }
+
+        public Criteria andEvaluationNotBetween(Integer value1, Integer value2) {
+            addCriterion("evaluation not between", value1, value2, "evaluation");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

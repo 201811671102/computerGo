@@ -1,5 +1,6 @@
 package com.computerGo.DTO;
 
+import com.alibaba.fastjson.JSONObject;
 import com.computerGo.pojo.Identity;
 import com.computerGo.pojo.UI;
 import com.computerGo.pojo.User;
@@ -20,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDTO extends User {
     private Integer role;
+    private JSONObject jsonObject;
     public void setUserDto(User user){
         this.setUid(user.getUid());
         this.setOpenid(user.getOpenid());

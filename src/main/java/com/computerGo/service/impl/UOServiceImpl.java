@@ -47,6 +47,20 @@ public class UOServiceImpl implements UOService {
         UOExample uoExample = new UOExample();
         UOExample.Criteria criteria = uoExample.createCriteria();
         criteria.andUidEqualTo(uid);
+        criteria.andShelluidNotEqualTo(uid);
+        if (offset!=-1&&limit!=-1) {
+            RowBounds rowBounds = new RowBounds(offset,limit);
+            return uoMapper.selectByExampleWithRowbounds(uoExample,rowBounds);
+        }
+        return uoMapper.selectByExample(uoExample);
+    }
+
+    @Override
+    public List<UO> selectByShelluid(Integer shelluid, int offset, int limit) throws Exception {
+        UOExample uoExample = new UOExample();
+        UOExample.Criteria criteria = uoExample.createCriteria();
+        criteria.andUidNotEqualTo(shelluid);
+        criteria.andShelluidEqualTo(shelluid);
         if (offset!=-1&&limit!=-1) {
             RowBounds rowBounds = new RowBounds(offset,limit);
             return uoMapper.selectByExampleWithRowbounds(uoExample,rowBounds);

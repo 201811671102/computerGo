@@ -17,6 +17,8 @@ public class Repertory {
 
     private Integer type;
 
+    private String watch;
+
     public Integer getRid() {
         return rid;
     }
@@ -79,5 +81,13 @@ public class Repertory {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getWatch() {
+        return watch;
+    }
+
+    public void setWatch(String watch) {
+        this.watch = watch == null ? null : watch.trim();
     }
 }

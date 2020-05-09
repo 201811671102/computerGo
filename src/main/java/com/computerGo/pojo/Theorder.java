@@ -23,6 +23,8 @@ public class Theorder {
 
     private String ordernumber;
 
+    private Integer evaluation;
+
     public Integer getOid() {
         return oid;
     }
@@ -101,5 +103,13 @@ public class Theorder {
 
     public void setOrdernumber(String ordernumber) {
         this.ordernumber = ordernumber == null ? null : ordernumber.trim();
+    }
+
+    public Integer getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(Integer evaluation) {
+        this.evaluation = evaluation;
     }
 }

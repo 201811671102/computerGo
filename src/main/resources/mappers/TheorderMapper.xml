@@ -12,6 +12,7 @@
     <result column="uname" jdbcType="VARCHAR" property="uname" />
     <result column="uphone" jdbcType="VARCHAR" property="uphone" />
     <result column="ordernumber" jdbcType="VARCHAR" property="ordernumber" />
+    <result column="evaluation" jdbcType="INTEGER" property="evaluation" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    oid, ordertime, rid, pid, num, state, uaddress, uname, uphone, ordernumber
+    oid, ordertime, rid, pid, num, state, uaddress, uname, uphone, ordernumber, evaluation
   </sql>
   <select id="selectByExample" parameterType="com.computerGo.pojo.TheorderExample" resultMap="BaseResultMap">
     select
@@ -110,12 +111,12 @@
     </selectKey>
     insert into theorder (ordertime, rid, pid, 
       num, state, uaddress, 
-      uname, uphone, ordernumber
-      )
+      uname, uphone, ordernumber, 
+      evaluation)
     values (#{ordertime,jdbcType=TIMESTAMP}, #{rid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, 
       #{num,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{uaddress,jdbcType=VARCHAR}, 
-      #{uname,jdbcType=VARCHAR}, #{uphone,jdbcType=VARCHAR}, #{ordernumber,jdbcType=VARCHAR}
-      )
+      #{uname,jdbcType=VARCHAR}, #{uphone,jdbcType=VARCHAR}, #{ordernumber,jdbcType=VARCHAR}, 
+      #{evaluation,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.computerGo.pojo.Theorder">
     <selectKey keyProperty="oid" order="AFTER" resultType="java.lang.Integer">
@@ -150,6 +151,9 @@
       <if test="ordernumber != null">
         ordernumber,
       </if>
+      <if test="evaluation != null">
+        evaluation,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="ordertime != null">
@@ -178,6 +182,9 @@
       </if>
       <if test="ordernumber != null">
         #{ordernumber,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluation != null">
+        #{evaluation,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -220,6 +227,9 @@
       <if test="record.ordernumber != null">
         ordernumber = #{record.ordernumber,jdbcType=VARCHAR},
       </if>
+      <if test="record.evaluation != null">
+        evaluation = #{record.evaluation,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -236,7 +246,8 @@
       uaddress = #{record.uaddress,jdbcType=VARCHAR},
       uname = #{record.uname,jdbcType=VARCHAR},
       uphone = #{record.uphone,jdbcType=VARCHAR},
-      ordernumber = #{record.ordernumber,jdbcType=VARCHAR}
+      ordernumber = #{record.ordernumber,jdbcType=VARCHAR},
+      evaluation = #{record.evaluation,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -271,6 +282,9 @@
       <if test="ordernumber != null">
         ordernumber = #{ordernumber,jdbcType=VARCHAR},
       </if>
+      <if test="evaluation != null">
+        evaluation = #{evaluation,jdbcType=INTEGER},
+      </if>
     </set>
     where oid = #{oid,jdbcType=INTEGER}
   </update>
@@ -284,7 +298,8 @@
       uaddress = #{uaddress,jdbcType=VARCHAR},
       uname = #{uname,jdbcType=VARCHAR},
       uphone = #{uphone,jdbcType=VARCHAR},
-      ordernumber = #{ordernumber,jdbcType=VARCHAR}
+      ordernumber = #{ordernumber,jdbcType=VARCHAR},
+      evaluation = #{evaluation,jdbcType=INTEGER}
     where oid = #{oid,jdbcType=INTEGER}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="com.computerGo.pojo.TheorderExample" resultMap="BaseResultMap">

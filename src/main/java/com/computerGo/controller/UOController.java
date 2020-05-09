@@ -42,19 +42,33 @@ public class UOController {
     @ResponseBody
     @ApiOperation(value = " 订单状态 0 待发货 1已发货 2 已签收  3已评价 获取用户消费记录|商户订单记录",notes = "500报错")
     public ResultDTO getUO(
+            @ApiParam(value = "商户查询 1| 用户查询 0",required = true)@RequestParam(value = "role",required = true)Integer role,
             @ApiParam(value = "用户id",required = true)@RequestParam(value = "uid",required = true)Integer uid,
             @ApiParam(value = "订单状态",required = true)@RequestParam(value = "state",required = true)Integer state,
             @ApiParam(value = "页码",required = true)@RequestParam(value = "offset",required = true) int offset,
             @ApiParam(value = "数据条数",required = true)@RequestParam(value = "limit",required = true) int limit){
         try {
-            List<UO> uoList = uoService.selectByUid(uid,offset*limit,limit);
+            Integer state2 = 5;
+            List<UO> uoList = new ArrayList<>();
+            if (role == 0){
+                uoList = uoService.selectByUid(uid,limit*offset,limit);
+                if (state == 1){
+                    state2 = 0;
+                }else if (state == 2){
+                    state2 = 3;
+                }
+            }else{
+                uoList = uoService.selectByShelluid(uid,offset*limit,limit);
+            }
             List<TheorderDTO> theorderDTOList = new ArrayList<>();
+            List<TheorderDTO> theorderDTOListnew = new ArrayList<>();
+            List<TheorderDTO> theorderDTOListnewtwo = new ArrayList<>();
             for (UO uo : uoList){
                 try {
                     Theorder theorder = theorderService.selectByOid(uo.getOid());
                     TheorderDTO theorderDTO  = new TheorderDTO();
                     theorderDTO.SetTheorderDTO(theorder);
-                    if (theorder.getState() == state) {
+                    if (theorder.getState() == state || theorder.getState() == state2) {
                         Package newpackage =  packageService.selectByPid(theorder.getPid());
                         Repertory repertory = repertoryService.selectByRid(theorder.getRid());
                         theorderDTO.setTitle(repertory.getTitle());
@@ -68,12 +82,21 @@ public class UOController {
                             case 4:theorderDTO.setType("散热器");break;
                             case 5:theorderDTO.setType("内存");break;
                         }
-                        theorderDTO.setEvaluation(repertoryService.selectByRid(theorder.getRid()).getEvaluation());
-                        theorderDTOList.add(theorderDTO);
+                        if (state2 == 3 && theorder.getState() == 2){
+                            theorderDTOListnew.add(theorderDTO);
+                        }else if (state2 == 3 && theorder.getState() == 3){
+                            theorderDTOListnewtwo.add(theorderDTO);
+                        }else{
+                            theorderDTOList.add(theorderDTO);
+                        }
                     }
                 }catch (Exception e){
                     continue;
                 }
+            }
+            if (state2 == 3){
+                theorderDTOListnew.addAll(theorderDTOListnewtwo);
+                return new ResultUtil().Success(theorderDTOListnew);
             }
             return new ResultUtil().Success(theorderDTOList);
         }catch (Exception e){
@@ -124,6 +147,7 @@ public class UOController {
                 Theorder theorder = new Theorder();
                 theorder.setOid(oid);
                 theorder.setState(3);
+                theorder.setEvaluation(ealeuation);
                 RP rp = rpService.selectBypid(pid);
                 Repertory repertory = repertoryService.selectByRid(rp.getRid());
                 long count = uoService.getCount(oid);

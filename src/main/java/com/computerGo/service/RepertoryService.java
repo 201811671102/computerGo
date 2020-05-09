@@ -8,7 +8,7 @@ public interface RepertoryService {
     /*rid查询商品*/
     Repertory selectByRid(Integer rid)throws Exception;
     /*商品名查询商品*/
-    List<Repertory> selectByTitle(String title,int offset, int limit)throws Exception;
+    List<Repertory> selectByTitleType(String title,Integer type,int offset, int limit)throws Exception;
     /*rid删除商品*/
     int deleteByRid(Integer rid)throws Exception;
     /*rid修改商品*/

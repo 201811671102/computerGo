@@ -7,6 +7,8 @@ public class UO {
 
     private Integer oid;
 
+    private Integer shelluid;
+
     public Integer getUoid() {
         return uoid;
     }
@@ -29,5 +31,13 @@ public class UO {
 
     public void setOid(Integer oid) {
         this.oid = oid;
+    }
+
+    public Integer getShelluid() {
+        return shelluid;
+    }
+
+    public void setShelluid(Integer shelluid) {
+        this.shelluid = shelluid;
     }
 }

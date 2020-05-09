@@ -1,9 +1,9 @@
 import com.computerGo.App;
+import com.computerGo.base.redis.RedisUtil;
 import com.computerGo.controller.URController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,7 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {App.class},webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class computerGo {
-
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Test
     public void yml(){
@@ -31,6 +32,7 @@ public class computerGo {
     private URController urController;
     @Test
     public void get(){
-        System.out.println(urController.getRepertory(1));
+    //    redisUtil.set("aaaaa1","CG");
+        System.out.println(redisUtil.get("computerGO1"));
     }
 }

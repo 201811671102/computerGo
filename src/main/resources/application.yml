@@ -27,7 +27,7 @@ spring:
       max-request-size: 200MB #设置一次请求上传文件的总容量
   redis:
     port: 6379
-    database: 1
+    database: 0
     host: 39.96.68.53
     password:
     jedis:

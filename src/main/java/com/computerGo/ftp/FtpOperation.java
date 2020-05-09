@@ -6,8 +6,12 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import sun.net.ftp.FtpClient;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -20,19 +24,15 @@ import java.io.InputStream;
 @Log4j2
 public class FtpOperation {
 
-    private final String userName = "ftpuser";
-
-    private final String passWord = "123";
-
-    private final String ip = "39.96.68.53";
-
-    private final int port = 6060;
-
     //默认文件类型为二进制（图片）
-    private int filetype = FTP.BINARY_FILE_TYPE;
+    private static int filetype = FTP.BINARY_FILE_TYPE;
 
-    // ftp客户端
-    private FTPClient ftpClient = new FTPClient();
+    @Autowired
+    FtpConfig config;
+    @Autowired
+    private ResourceLoader resourceLoader;
+    @Autowired
+    private FtpPool pool;
 
     /**
      *
@@ -42,16 +42,15 @@ public class FtpOperation {
      * @return
      * @throws IOException
      */
-    public boolean uploadToFtp(InputStream buffIn, String fileName, String filepath){
+    public  boolean uploadToFtp(InputStream buffIn, String fileName, String filepath){
+        FTPClient ftpClient = pool.getFTPClient();
         // 上传文件
         try {
-            // 设置传输二进制文件
-            setFileType(filetype);
+            setFileType(filetype,ftpClient);
             int reply = ftpClient.getReplyCode();
             if(!FTPReply.isPositiveCompletion(reply))
             {
                 ftpClient.disconnect();
-                log.info("failed to connect to the FTP Server:"+ip);
                 return false;
             }
             ftpClient.enterLocalPassiveMode();
@@ -86,6 +85,7 @@ public class FtpOperation {
                 if (buffIn != null) {
                     buffIn.close();
                 }
+                pool.returnFTPClient(ftpClient);
             } catch (Exception e) {
                 log.error("ftp关闭输入流时失败！", e);
             }
@@ -101,15 +101,15 @@ public class FtpOperation {
      * @return
      * @throws IOException
      */
-    public InputStream  downloadFile(String filename,String filepath){
+    public  InputStream  downloadFile(String filename,String filepath){
         InputStream in=null;
+        FTPClient ftpClient = pool.getFTPClient();
         try {
             ftpClient.enterLocalPassiveMode();
             // 设置传输二进制文件
-            setFileType(filetype);
+            setFileType(filetype,ftpClient);
             if(!FTPReply.isPositiveCompletion(ftpClient.getReplyCode()))
             {
-                log.info("failed to connect to the FTP Server:"+ip);
                 return null;
             }
             if (!ftpClient.changeWorkingDirectory(filepath)){
@@ -122,11 +122,14 @@ public class FtpOperation {
         }catch (Exception e) {
             log.error("ERR : upload file "+ filename+ " from ftp : failed!", e);
             return null;
+        }finally {
+            pool.returnFTPClient(ftpClient);
         }
     }
 
 
-    public boolean delectFile(String filename,String filepath){
+    public  boolean delectFile(String filename,String filepath){
+        FTPClient ftpClient = pool.getFTPClient();
         try {
             filename = new String(filename.getBytes("utf-8"),"iso-8859-1");
             ftpClient.changeWorkingDirectory(filepath);
@@ -137,6 +140,8 @@ public class FtpOperation {
         }catch (Exception e) {
             log.error("ERR : delete file "+ filename+ " from ftp : failed!", e);
             return false;
+        }finally {
+            pool.returnFTPClient(ftpClient);
         }
     }
     /**
@@ -145,18 +150,20 @@ public class FtpOperation {
      * @param fileType
      *            --BINARY_FILE_TYPE、ASCII_FILE_TYPE
      */
-    public void setFileType(int fileType) {
+    public  void setFileType(int fileType,FTPClient ftpClient) {
         try {
             ftpClient.setFileType(fileType);
         } catch (Exception e) {
             log.error("ftp设置传输文件的类型时失败！", e);
+        }finally {
+
         }
     }
-
-    /**
+/*
+    *//**
      *
      * 功能：关闭连接
-     */
+     *//*
     public void closeConnect() {
         try {
             if (ftpClient != null) {
@@ -168,9 +175,9 @@ public class FtpOperation {
         }
     }
 
-    /**
+    *//**
      * 连接到ftp服务器
-     */
+     *//*
     public void connectToServer() throws FTPConnectionClosedException,Exception {
         if (!ftpClient.isConnected()) {
             int reply;
@@ -192,5 +199,5 @@ public class FtpOperation {
                 throw e;
             }
         }
-    }
+    }*/
 }

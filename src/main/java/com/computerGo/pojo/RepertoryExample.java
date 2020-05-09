@@ -613,6 +613,76 @@ public class RepertoryExample {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
+
+        public Criteria andWatchIsNull() {
+            addCriterion("watch is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchIsNotNull() {
+            addCriterion("watch is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchEqualTo(String value) {
+            addCriterion("watch =", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchNotEqualTo(String value) {
+            addCriterion("watch <>", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchGreaterThan(String value) {
+            addCriterion("watch >", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchGreaterThanOrEqualTo(String value) {
+            addCriterion("watch >=", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchLessThan(String value) {
+            addCriterion("watch <", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchLessThanOrEqualTo(String value) {
+            addCriterion("watch <=", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchLike(String value) {
+            addCriterion("watch like", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchNotLike(String value) {
+            addCriterion("watch not like", value, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchIn(List<String> values) {
+            addCriterion("watch in", values, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchNotIn(List<String> values) {
+            addCriterion("watch not in", values, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchBetween(String value1, String value2) {
+            addCriterion("watch between", value1, value2, "watch");
+            return (Criteria) this;
+        }
+
+        public Criteria andWatchNotBetween(String value1, String value2) {
+            addCriterion("watch not between", value1, value2, "watch");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

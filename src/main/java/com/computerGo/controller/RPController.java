@@ -59,7 +59,11 @@ public class RPController {
                 RepertoryDTO repertoryDTO = new RepertoryDTO();
                 try {
                     repertoryDTO.setRepertoryDTO(repertory);
-                    repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
+                    if (redisUtil.hasKey("computerGO"+repertory.getRid().toString())){
+                        repertoryDTO.setWatched(redisUtil.get("computerGO"+repertory.getRid().toString()).toString());
+                    }else {
+                        repertoryDTO.setWatched(repertory.getWatch());
+                    }
                 }catch (Exception e){
                     continue;
                 }
@@ -79,21 +83,18 @@ public class RPController {
             @ApiParam(value = "页码",required = true)@RequestParam(value = "offset",required = true) int offset,
             @ApiParam(value = "数据条数",required = true)@RequestParam(value = "limit",required = true) int limit){
         try {
-            List<Repertory> repertoryList = repertoryService.selectByTitle(title,offset*limit,limit);
+            List<Repertory> repertoryList = repertoryService.selectByTitleType(title,0,offset*limit,limit);
             List<RepertoryDTO> repertoryDTOS = new ArrayList<>();
             for (Repertory repertory : repertoryList){
                 try {
                     RepertoryDTO repertoryDTO = new RepertoryDTO();
                     repertoryDTO.setRepertoryDTO(repertory);
-                    boolean b=true;
-                    if (repertory.getType() != 0){
-                        b=false;
-                        break;
+                    if (redisUtil.hasKey("computerGO"+repertory.getRid().toString())){
+                        repertoryDTO.setWatched(redisUtil.get("computerGO"+repertory.getRid().toString()).toString());
+                    }else {
+                        repertoryDTO.setWatched(repertory.getWatch());
                     }
-                    repertoryDTO.setWatched(redisUtil.get(repertory.getRid().toString()).toString());
-                    if (b){
-                        repertoryDTOS.add(repertoryDTO);
-                    }
+                    repertoryDTOS.add(repertoryDTO);
                 }catch (Exception e){
                     continue;
                 }
@@ -119,7 +120,11 @@ public class RPController {
             RepertoryPackageDTO repertoryPackageDTO = new RepertoryPackageDTO();
             repertoryPackageDTO.setRepertoryDTO(repertory);
             repertoryPackageDTO.setPackageList(packageList);
-            repertoryPackageDTO.setWatched(redisUtil.get(rid.toString()).toString());
+            if (redisUtil.hasKey("computerGO"+rid.toString())){
+                repertoryPackageDTO.setWatched(redisUtil.get("computerGO"+rid.toString()).toString());
+            }else {
+                repertoryPackageDTO.setWatched(repertory.getWatch());
+            }
             return new ResultUtil().Success(repertoryPackageDTO);
         }catch (Exception e){
             return new ResultUtil().Error("500",e.toString());

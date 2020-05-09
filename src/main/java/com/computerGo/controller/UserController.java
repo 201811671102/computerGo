@@ -13,6 +13,7 @@ import com.computerGo.service.IdentityService;
 import com.computerGo.service.UIService;
 import com.computerGo.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -45,12 +46,13 @@ public class UserController {
     @ResponseBody
     @ApiOperation(value = "登录",notes = "role 0普通用户 1 商户")
     public ResultDTO user_login(
-            @ApiParam(value = "接收小程序发送的code",required = true)@RequestParam(value = "code", required = false) String code) {
+           @ApiParam(value = "接收小程序发送的code",required = true)@RequestParam(value = "code", required = false) String code) {
         try {
             JSONObject SessionKeyOpenId = new WechatUtil().getSessionKeyOrOpenId(code);
             String openid = SessionKeyOpenId.getString("openid");
             User user = userService.selectByOpenid(openid);
             UserDTO userDto = new UserDTO();
+            userDto.setJsonObject(SessionKeyOpenId);
             if (user == null) {
                 user = new User();
                 user.setOpenid(openid);
